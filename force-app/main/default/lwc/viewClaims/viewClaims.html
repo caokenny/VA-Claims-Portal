@@ -1,0 +1,31 @@
+<template>
+    <div class="claims-container">
+        <h2>Your Claims</h2>
+        <template if:true={claims}>
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Claim Id</th>
+                        <th>Claim Type</th>
+                        <th>Status</th>
+                        <th>Submitted Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={claims} for:item="claim">
+                        <tr key={claim.Name}>
+                            <td>{claim.Name}</td>
+                            <td>{claim.Type__c}</td>
+                            <td>{claim.Status__c}</td>
+                            <td>{claim.Date_Of_Injury__c}</td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </template>
+
+        <template if:true={error}>
+            <p class="error-message">Error loading claims: {error}</p>
+        </template>
+    </div>
+</template>
