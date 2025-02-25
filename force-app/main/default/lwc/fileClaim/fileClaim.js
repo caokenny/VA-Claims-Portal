@@ -1,80 +1,86 @@
 import { LightningElement, track, wire } from 'lwc';
-import getRecordTypes from '@salesforce/apex/ClaimController.getRecordTypes';
-import getFieldsForRecordType from '@salesforce/apex/ClaimController.getFieldsForRecordType';
-import createClaim from '@salesforce/apex/ClaimController.createClaim';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { getRecord } from 'lightning/uiRecordApi';
+import USER_ID from '@salesforce/user/Id';
+import getClaimTypes from '@salesforce/apex/ClaimController.getClaimTypes';
+import createClaim from '@salesforce/apex/ClaimController.createClaim';
 
-export default class CreateClaimLWC extends LightningElement {
-    @track recordTypeOptions = [];
-    @track selectedRecordType = '';
-    @track fieldsToShow = [];
-    @track claimRecord = {};
-    @track uploadedFiles = [];
-    isLoading = false;
+export default class FileClaim extends LightningElement {
+    @track claimTypes = [];
+    @track selectedType = '';
+    @track showFields = {};
+    @track claimantId;
 
-    // Fetch record types from Apex
-    @wire(getRecordTypes)
-    wiredRecordTypes({ error, data }) {
+    claimRecord = {
+        Claim_Type__c: '',
+        Disability__c: '',
+        Date_Of_Injury__c: '',
+        Annual_Income__c: '',
+        Currently_Homeless__c: '',
+        Housing_Status__c: '',
+        Education_Type__c: '',
+        Institution_Name__c: ''
+    };
+
+    // Get logged-in user details
+    @wire(getRecord, { recordId: USER_ID, fields: ['User.ContactId'] })
+    wiredUser({ data, error }) {
         if (data) {
-            this.recordTypeOptions = data.map(rt => ({ label: rt.Name, value: rt.Id }));
+            this.claimantId = data.fields.ContactId.value;
         } else if (error) {
-            console.error('Error fetching record types:', error);
+            console.error('Error fetching user data:', error);
         }
     }
 
-    // Handle Record Type Selection
-    handleRecordTypeChange(event) {
-        this.selectedRecordType = event.detail.value;
-        this.claimRecord = {}; // Reset fields when changing record type
+    // Fetch claim types
+    @wire(getClaimTypes)
+    wiredTypes({ data, error }) {
+        if (data) {
+            this.claimTypes = data.map(type => ({ label: type, value: type }));
+        } else if (error) {
+            console.error(error);
+        }
+    }
 
-        getFieldsForRecordType({ recordTypeId: this.selectedRecordType })
-            .then(data => {
-                this.fieldsToShow = data.map(field => ({
-                    apiName: field.apiName,
-                    label: field.label,
-                    type: field.type.toLowerCase() // Ensure correct input type handling
+    handleTypeChange(event) {
+        this.selectedType = event.detail.value;
+        this.updateFieldsVisibility();
+    }
+
+    updateFieldsVisibility() {
+        this.showFields = {
+            disability: ['Healthcare', 'Pension', 'Disability'].includes(this.selectedType),
+            dateOfInjury: ['Healthcare', 'Pension', 'Disability'].includes(this.selectedType),
+            annualIncome: ['Healthcare', 'Housing', 'Pension', 'Education', 'Disability'].includes(this.selectedType),
+            currentlyHomeless: this.selectedType === 'Housing',
+            housingStatus: this.selectedType === 'Housing',
+            educationType: this.selectedType === 'Education',
+            institutionName: this.selectedType === 'Education'
+        };
+    }
+
+    handleInputChange(event) {
+        this.claimRecord[event.target.name] = event.target.value;
+    }
+
+    handleSubmit() {
+        this.claimRecord.Claim_Type__c = this.selectedType;
+
+        createClaim({ newClaim: this.claimRecord })
+            .then(() => {
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Claim filed successfully!',
+                    variant: 'success'
                 }));
             })
-            .catch(error => console.error('Error fetching fields', error));
-    }
-
-    // Handle Input Changes
-    handleFieldChange(event) {
-        const fieldName = event.target.name;
-        this.claimRecord[fieldName] = event.target.value;
-    }
-
-    // Handle File Upload
-    handleFileUpload(event) {
-        this.uploadedFiles = event.detail.files.map(file => file.documentId);
-    }
-
-    // Submit Claim
-    handleSubmit() {
-        if (!this.selectedRecordType) {
-            this.showToast('Error', 'Please select a Record Type.', 'error');
-            return;
-        }
-
-        this.isLoading = true;
-        const fields = { ...this.claimRecord, RecordTypeId: this.selectedRecordType, files: this.uploadedFiles };
-
-        createClaim({ claimData: fields })
-            .then(() => {
-                this.showToast('Success', 'Claim Created Successfully', 'success');
-                this.claimRecord = {};
-                this.selectedRecordType = '';
-                this.uploadedFiles = [];
-            })
             .catch(error => {
-                this.showToast('Error', 'Error creating claim: ' + JSON.stringify(error), 'error');
-            })
-            .finally(() => {
-                this.isLoading = false;
+                console.error(error);
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Failed to file claim',
+                    variant: 'error'
+                }));
             });
-    }
-
-    showToast(title, message, variant) {
-        this.dispatchEvent(new ShowToastEvent({ title, message, variant }));
     }
 }

@@ -1,38 +1,56 @@
 <template>
     <lightning-card title="Create Claim">
         <div class="slds-m-around_medium">
-            <!-- Record Type Selection -->
-            <lightning-combobox
-                label="Select Claim Type"
-                value={selectedRecordType}
-                options={recordTypeOptions}
-                onchange={handleRecordTypeChange}
-                placeholder="Select a Record Type">
+            <!-- Claimant (Auto-filled) -->
+            <lightning-input label="Claimant" value={claimantId} disabled></lightning-input>
+
+            <!-- Claim Type Selection -->
+            <lightning-combobox 
+                label="Claim Type" 
+                options={claimTypes} 
+                value={selectedType} 
+                onchange={handleTypeChange}>
             </lightning-combobox>
 
-            <template if:true={selectedRecordType}>
-                <p><strong>Selected Type:</strong> {selectedRecordType}</p>
-
-                <!-- Dynamically Render Fields Based on Selected Record Type -->
-                <template for:each={fieldsToShow} for:item="field">
-                    <lightning-input key={field.apiName} 
-                        name={field.apiName} 
-                        label={field.label} 
-                        type={field.type} 
-                        onchange={handleFieldChange}>
-                    </lightning-input>
-                </template>
-
-                <!-- File Upload -->
-                <lightning-file-upload
-                    label="Upload Attachments"
-                    multiple
-                    onuploadfinished={handleFileUpload}>
-                </lightning-file-upload>
-
-                <br />
-                <lightning-button variant="brand" label="Submit Claim" onclick={handleSubmit}></lightning-button>
+            <!-- Conditional Fields Based on Claim Type -->
+            <template if:true={showFields.disability}>
+                <lightning-input label="Disability" name="Disability__c" onchange={handleInputChange}></lightning-input>
             </template>
+
+            <template if:true={showFields.dateOfInjury}>
+                <lightning-input type="date" label="Date of Injury" name="Date_Of_Injury__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.annualIncome}>
+                <lightning-input type="number" label="Annual Income" name="Annual_Income__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.currentlyHomeless}>
+                <lightning-input type="checkbox" label="Currently Homeless?" name="Currently_Homeless__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.housingStatus}>
+                <lightning-input label="Housing Status" name="Housing_Status__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.educationType}>
+                <lightning-input label="Education Type" name="Education_Type__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.institutionName}>
+                <lightning-input label="Institution Name" name="Institution_Name__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <!-- File Upload -->
+            <lightning-file-upload
+                label="Attach Supporting Documents"
+                name="fileUploader"
+                multiple
+                record-id={claimantId}>
+            </lightning-file-upload>
+
+            <!-- Submit Button -->
+            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="slds-m-top_medium"></lightning-button>
         </div>
     </lightning-card>
 </template>
