@@ -1,28 +1,38 @@
 <template>
-    <div class="file-claim-container">
-        <h2>File a New Claim</h2>
+    <lightning-card title="Create Claim">
+        <div class="slds-m-around_medium">
+            <!-- Record Type Selection -->
+            <lightning-combobox
+                label="Select Claim Type"
+                value={selectedRecordType}
+                options={recordTypeOptions}
+                onchange={handleRecordTypeChange}
+                placeholder="Select a Record Type">
+            </lightning-combobox>
 
-        <lightning-input label="Claimant Name" name="Claimant__c" onchange={handleChange}></lightning-input>
-        <lightning-input type="date" label="Date of Injury" name="Date_Of_Injury__c" onchange={handleChange}></lightning-input>
-        
-        <lightning-combobox label="Type" name="Type__c"
-            options={typeOptions} onchange={handleChange}>
-        </lightning-combobox>
+            <template if:true={selectedRecordType}>
+                <p><strong>Selected Type:</strong> {selectedRecordType}</p>
 
-        <lightning-textarea label="Disability Details" name="Disability__c" onchange={handleChange}></lightning-textarea>
+                <!-- Dynamically Render Fields Based on Selected Record Type -->
+                <template for:each={fieldsToShow} for:item="field">
+                    <lightning-input key={field.apiName} 
+                        name={field.apiName} 
+                        label={field.label} 
+                        type={field.type} 
+                        onchange={handleFieldChange}>
+                    </lightning-input>
+                </template>
 
-        <lightning-combobox label="Housing Status" name="Housing_Status__c"
-            options={housingOptions} onchange={handleChange}>
-        </lightning-combobox>
+                <!-- File Upload -->
+                <lightning-file-upload
+                    label="Upload Attachments"
+                    multiple
+                    onuploadfinished={handleFileUpload}>
+                </lightning-file-upload>
 
-        <lightning-input type="checkbox" label="Currently Homeless?" name="Currently_Homeless__c" onchange={handleCheckboxChange}></lightning-input>
-
-        <lightning-combobox label="Education Type" name="Education_Type__c"
-            options={educationOptions} onchange={handleChange}>
-        </lightning-combobox>
-
-        <lightning-file-upload label="Upload Evidence" name="Has_Attachment__c" onchange={handleFileUpload}></lightning-file-upload>
-
-        <lightning-button label="Submit Claim" onclick={handleSubmit} variant="brand"></lightning-button>
-    </div>
+                <br />
+                <lightning-button variant="brand" label="Submit Claim" onclick={handleSubmit}></lightning-button>
+            </template>
+        </div>
+    </lightning-card>
 </template>

@@ -1,17 +1,63 @@
 public with sharing class ClaimController {
+    @AuraEnabled(cacheable=true)
+    public static List<RecordType> getRecordTypes() {
+        return [SELECT Id, Name FROM RecordType WHERE SObjectType = 'Claim__c'];
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<FieldMetadata> getFieldsForRecordType(Id recordTypeId) {
+        List<FieldMetadata> fieldList = new List<FieldMetadata>();
+
+        // Retrieve only fields available for this record type
+        Schema.DescribeSObjectResult objDescribe = Schema.getGlobalDescribe().get('Claim__c').getDescribe();
+        Map<String, Schema.SObjectField> fieldsMap = objDescribe.fields.getMap();
+        
+        for (Schema.SObjectField field : fieldsMap.values()) {
+            Schema.DescribeFieldResult fieldDescribe = field.getDescribe();
+            if (fieldDescribe.isAccessible()) { // Only add fields user has access to
+                fieldList.add(new FieldMetadata(fieldDescribe.getName(), fieldDescribe.getLabel(), fieldDescribe.getType().name()));
+            }
+        }
+        return fieldList;
+    }
+
+    public class FieldMetadata {
+        @AuraEnabled public String apiName;
+        @AuraEnabled public String label;
+        @AuraEnabled public String type;
+        
+        public FieldMetadata(String apiName, String label, String type) {
+            this.apiName = apiName;
+            this.label = label;
+            this.type = type;
+        }
+    }
+
     @AuraEnabled
     public static Claim__c createClaim(Map<String, Object> claimData) {
-        Claim__c newClaim = new Claim__c(
-            Claimant__c = (String) claimData.get('Claimant__c'),
-            Date_Of_Injury__c = Date.valueOf((String) claimData.get('Date_Of_Injury__c')),
-            Type__c = (String) claimData.get('Type__c'),
-            Disability__c = (String) claimData.get('Disability__c'),
-            Housing_Status__c = (String) claimData.get('Housing_Status__c'),
-            Currently_Homeless__c = (Boolean) claimData.get('Currently_Homeless__c'),
-            Education_Type__c = (String) claimData.get('Education_Type__c'),
-            Has_Attachment__c = (Boolean) claimData.get('Has_Attachment__c')
-        );
+        Claim__c newClaim = new Claim__c();
+        
+        for (String key : claimData.keySet()) {
+            if (key != 'files') {
+                newClaim.put(key, claimData.get(key));
+            }
+        }
         insert newClaim;
+
+        // Handle file attachments
+        if (claimData.containsKey('files') && ((List<String>) claimData.get('files')).size() > 0) {
+            List<ContentVersion> attachments = new List<ContentVersion>();
+            for (String fileId : (List<String>) claimData.get('files')) {
+                ContentVersion attachment = new ContentVersion(
+                    Title = 'Claim Attachment',
+                    PathOnClient = fileId,
+                    VersionData = (Blob) claimData.get('fileData'),
+                    FirstPublishLocationId = newClaim.Id
+                );
+                attachments.add(attachment);
+            }
+            insert attachments;
+        }
         return newClaim;
     }
 }
