@@ -1,3 +1,19 @@
 <template>
-    
+    <lightning-card title="Submit an Appeal">
+        <div class="slds-p-around_medium">
+            <lightning-input label="Reason" value={reason} onchange={handleChange} data-field="Reason__c"></lightning-input>
+            <lightning-textarea label="Comments" value={comments} onchange={handleChange} data-field="Comments__c"></lightning-textarea>
+            <lightning-input type="checkbox" label="Has Attachment?" checked={hasAttachment} onchange={handleChange} data-field="Has_Attachment__c"></lightning-input>
+
+            <lightning-file-upload
+                label="Upload Attachment"
+                name="fileUploader"
+                record-id={appealId}
+                onuploadfinished={handleFileUpload}
+                multiple>
+            </lightning-file-upload>
+
+            <lightning-button label="Submit Appeal" onclick={handleSubmit} variant="brand"></lightning-button>
+        </div>
+    </lightning-card>
 </template>
