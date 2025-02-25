@@ -1,5 +1,5 @@
 import { LightningElement, wire, track } from 'lwc';
-import getClaims from '@salesforce/apex/ClaimController.getUserClaims';
+import getClaims from '@salesforce/apex/ViewClaimController.getUserClaims';
 
 export default class ViewClaims extends LightningElement {
     @track claims;
