@@ -11,6 +11,7 @@ export default class RegistrationForm extends LightningElement {
   veteranStatus = "";
   dischargeType = "";
   errorMessage = "";
+  password = "";
   showDischargeType = false;
 
   handleInputChange(event) {
@@ -61,14 +62,16 @@ export default class RegistrationForm extends LightningElement {
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
+        password: this.password,
         dateOfBirth: this.dateOfBirth,
         phone: this.phone,
         militaryBranch: this.militaryBranch,
         veteranStatus: this.veteranStatus,
         dischargeType: this.dischargeType
       });
-      if (result === "Success") {
+      if (result === "/login") {
         this.errorMessage = "User registered successfully!";
+        window.location.href = result;
       } else {
         this.errorMessage = result;
       }

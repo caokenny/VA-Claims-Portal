@@ -4,6 +4,7 @@ public without sharing class RegistrationController {
     String firstName,
     String lastName,
     String email,
+    String password,
     String phone,
     Date dateOfBirth,
     String militaryBranch,
@@ -44,9 +45,9 @@ public without sharing class RegistrationController {
       insert newClaimant;
 
       // Set the password for the user
-      // System.setPassword(newUser.Id, password);
+      System.setPassword(newUser.Id, password);
 
-      return 'Success';
+      return '/login';
     } catch (Exception e) {
       return 'Error: ' + e.getMessage();
     }
