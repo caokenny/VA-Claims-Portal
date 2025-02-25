@@ -1,17 +1,12 @@
 public with sharing class ViewClaimController {
     @AuraEnabled(cacheable=true)
     public static List<Claim__c> getUserClaims() {
-        try {
-            Id userId = UserInfo.getUserId();
-            return [
-                SELECT Name, Claimant__c, Type__c, Status__c, Date_Of_Injury__c, Has_Attachment__c
+        Id userId = UserInfo.getUserId();
+        return [SELECT Id, Name, Claimant__c, Claimant__r.First_Name__c, Claimant__r.Last_Name__c, 
+                       Type__c, Status__c, Date_Of_Injury__c, 
+                       Education_Type__c, Disability__c, Housing_Status__c
                 FROM Claim__c 
                 WHERE CreatedById = :userId
-                ORDER BY CreatedDate DESC
-            ];
-        } catch (Exception e) {
-            System.debug('Error retrieving claims: ' + e.getMessage());
-            return new List<Claim__c>();
-        }
+                ORDER BY CreatedDate DESC];
     }
 }
