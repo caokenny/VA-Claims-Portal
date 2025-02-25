@@ -9,18 +9,19 @@ export default class RegistrationForm extends LightningElement {
   phone = "";
   militaryBranch = "";
   veteranStatus = "";
-  // dischargeType = '';
+  dischargeType = "";
   errorMessage = "";
-  // showDischargeType = false;
+  password = "";
+  showDischargeType = false;
 
   handleInputChange(event) {
     const field = event.target.dataset.id;
     this[field] = event.target.value;
     // console.log(`Field: ${field}, Value: ${this[field]}`);
 
-    // if (field === 'veteranStatus') {
-    //     this.showDischargeType = (this.veteranStatus !== 'Active Duty');
-    // }
+    if (field === "veteranStatus") {
+      this.showDischargeType = this.veteranStatus === "Discharged";
+    }
   }
 
   get branches() {
@@ -42,15 +43,18 @@ export default class RegistrationForm extends LightningElement {
     ];
   }
 
-  // get dischargeOptions() {
-  //     return [
-  //         {label: 'Honorable', value: 'Honorable'},
-  //         {label: 'General under Honorable Conditions', value: 'General under Honorable Conditions'},
-  //         {label: 'Other than Honorable', value: 'Other than Honorable'},
-  //         {label: 'Bad Conduct', value: 'Bad Conduct'},
-  //         {label: 'Dishonorable', value: 'Dishonorable'}
-  //     ];
-  // }
+  get dischargeOptions() {
+    return [
+      { label: "Honorable", value: "Honorable" },
+      {
+        label: "General under Honorable Conditions",
+        value: "General under Honorable Conditions"
+      },
+      { label: "Other than Honorable", value: "Other than Honorable" },
+      { label: "Bad Conduct", value: "Bad Conduct" },
+      { label: "Dishonorable", value: "Dishonorable" }
+    ];
+  }
 
   async handleRegister() {
     try {
@@ -58,14 +62,16 @@ export default class RegistrationForm extends LightningElement {
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
+        password: this.password,
         dateOfBirth: this.dateOfBirth,
         phone: this.phone,
         militaryBranch: this.militaryBranch,
-        veteranStatus: this.veteranStatus
-        // dischargeType: this.dischargeType
+        veteranStatus: this.veteranStatus,
+        dischargeType: this.dischargeType
       });
-      if (result === "Success") {
+      if (result === "/login") {
         this.errorMessage = "User registered successfully!";
+        window.location.href = result;
       } else {
         this.errorMessage = result;
       }

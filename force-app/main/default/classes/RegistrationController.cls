@@ -4,10 +4,12 @@ public without sharing class RegistrationController {
     String firstName,
     String lastName,
     String email,
+    String password,
     String phone,
     Date dateOfBirth,
     String militaryBranch,
-    String veteranStatus /*, String dischargeType*/
+    String veteranStatus,
+    String dischargeType
   ) {
     try {
       // Create User record with a lookup to Claimant__c
@@ -36,16 +38,16 @@ public without sharing class RegistrationController {
         Phone__c = phone,
         Military_Branch__c = militaryBranch,
         Veteran_Status__c = veteranStatus,
-        //Discharge_Type__c = dischargeType,
+        Discharge_Type__c = dischargeType,
         User__c = newUser.Id
       );
 
       insert newClaimant;
 
       // Set the password for the user
-      // System.setPassword(newUser.Id, password);
+      System.setPassword(newUser.Id, password);
 
-      return 'Success';
+      return '/login';
     } catch (Exception e) {
       return 'Error: ' + e.getMessage();
     }

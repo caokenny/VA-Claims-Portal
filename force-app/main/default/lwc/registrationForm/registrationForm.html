@@ -28,7 +28,13 @@
       onchange={handleInputChange}
       data-id="phone"
     ></lightning-input>
-    <!-- <lightning-input type="password" label="Password" value={password} onchange={handleInputChange} data-id="password"></lightning-input> -->
+    <lightning-input
+      type="password"
+      label="Password"
+      value={password}
+      onchange={handleInputChange}
+      data-id="password"
+    ></lightning-input>
     <lightning-input
       type="date"
       date-style="short"
@@ -51,15 +57,15 @@
       data-id="veteranStatus"
       onchange={handleInputChange}
     ></lightning-combobox>
-    <!-- <template if:true={showDischargeType}>
-            <lightning-combobox
-                label="Discharge Type"
-                value={dischargeType}
-                options={dischargeOptions}
-                data-id="dischargeType"
-                onchange={handleInputChange}
-                ></lightning-combobox>
-        </template> -->
+    <template if:true={showDischargeType}>
+      <lightning-combobox
+        label="Discharge Type"
+        value={dischargeType}
+        options={dischargeOptions}
+        data-id="dischargeType"
+        onchange={handleInputChange}
+      ></lightning-combobox>
+    </template>
     <lightning-button
       label="Register"
       onclick={handleRegister}
