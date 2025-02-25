@@ -1,4 +1,4 @@
-public with sharing class ClaimantController {
+public without sharing class ClaimantController {
   @AuraEnabled(cacheable=true)
   public static Claimant__c getLoggedInUser() {
     Id currentUserId = UserInfo.getUserId();

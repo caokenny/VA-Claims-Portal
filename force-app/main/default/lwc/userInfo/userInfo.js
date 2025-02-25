@@ -15,6 +15,7 @@ export default class ClaimantDetails extends LightningElement {
     if (data) {
       this.claimant = { ...data }; // Deep copy for editing
       this.originalClaimant = { ...data }; // Store original values
+      console.log("Wire Service Ran");
       this.error = undefined;
     } else if (error) {
       this.error = error.body.message;

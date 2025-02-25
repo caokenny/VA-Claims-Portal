@@ -69,7 +69,7 @@ export default class RegistrationForm extends LightningElement {
         veteranStatus: this.veteranStatus,
         dischargeType: this.dischargeType
       });
-      if (result === "/login") {
+      if (result === "/s/login") {
         this.errorMessage = "User registered successfully!";
         window.location.href = result;
       } else {

@@ -46,8 +46,9 @@ public without sharing class RegistrationController {
 
       // Set the password for the user
       System.setPassword(newUser.Id, password);
+      // System.resetPassword(newUser.Id, true);
 
-      return '/login';
+      return '/s/login';
     } catch (Exception e) {
       return 'Error: ' + e.getMessage();
     }
