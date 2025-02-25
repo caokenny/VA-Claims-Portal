@@ -1,3 +1,28 @@
 <template>
-    
+    <div class="file-claim-container">
+        <h2>File a New Claim</h2>
+
+        <lightning-input label="Claimant Name" name="Claimant__c" onchange={handleChange}></lightning-input>
+        <lightning-input type="date" label="Date of Injury" name="Date_Of_Injury__c" onchange={handleChange}></lightning-input>
+        
+        <lightning-combobox label="Type" name="Type__c"
+            options={typeOptions} onchange={handleChange}>
+        </lightning-combobox>
+
+        <lightning-textarea label="Disability Details" name="Disability__c" onchange={handleChange}></lightning-textarea>
+
+        <lightning-combobox label="Housing Status" name="Housing_Status__c"
+            options={housingOptions} onchange={handleChange}>
+        </lightning-combobox>
+
+        <lightning-input type="checkbox" label="Currently Homeless?" name="Currently_Homeless__c" onchange={handleCheckboxChange}></lightning-input>
+
+        <lightning-combobox label="Education Type" name="Education_Type__c"
+            options={educationOptions} onchange={handleChange}>
+        </lightning-combobox>
+
+        <lightning-file-upload label="Upload Evidence" name="Has_Attachment__c" onchange={handleFileUpload}></lightning-file-upload>
+
+        <lightning-button label="Submit Claim" onclick={handleSubmit} variant="brand"></lightning-button>
+    </div>
 </template>
