@@ -7,7 +7,8 @@ public without sharing class RegistrationController {
     String phone,
     Date dateOfBirth,
     String militaryBranch,
-    String veteranStatus /*, String dischargeType*/
+    String veteranStatus,
+    String dischargeType
   ) {
     try {
       // Create User record with a lookup to Claimant__c
@@ -36,7 +37,7 @@ public without sharing class RegistrationController {
         Phone__c = phone,
         Military_Branch__c = militaryBranch,
         Veteran_Status__c = veteranStatus,
-        //Discharge_Type__c = dischargeType,
+        Discharge_Type__c = dischargeType,
         User__c = newUser.Id
       );
 
