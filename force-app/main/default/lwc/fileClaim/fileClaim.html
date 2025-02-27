@@ -6,12 +6,12 @@
 
             <!-- Claim Type Selection -->
             <lightning-combobox 
-                label="Claim Type" 
-                options={claimTypes} 
-                value={selectedType} 
-                onchange={handleTypeChange}>
+            label="Claim Type" 
+            options={claimTypeOptions} 
+            value={selectedType} 
+            onchange={handleTypeChange}>
             </lightning-combobox>
-
+        
             <!-- Conditional Fields Based on Claim Type -->
             <template if:true={showFields.disability}>
                 <lightning-input label="Disability" name="Disability__c" onchange={handleInputChange}></lightning-input>
