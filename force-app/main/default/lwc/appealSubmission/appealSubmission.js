@@ -1,12 +1,41 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, wire } from 'lwc';
+import getDeniedClaims from '@salesforce/apex/AppealSubmissionController.getDeniedClaims';
+import getReasonPicklistValues from '@salesforce/apex/AppealSubmissionController.getReasonPicklistValues';
 import submitAppeal from '@salesforce/apex/AppealSubmissionController.submitAppeal';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class AppealForm extends LightningElement {
-    @track reason = '';
+    @track claimOptions = [];
+    @track reasonOptions = [];
+    @track selectedClaim = '';
+    @track selectedReason = '';
     @track comments = '';
     @track hasAttachment = false;
-    @track appealId; // Stores the newly created appeal ID
+    @track appealId;
+
+    @wire(getDeniedClaims)
+    wiredClaims({ error, data }) {
+        if (data) {
+            this.claimOptions = data.map(claim => ({
+                label: claim.Name,   // Display the claim Name field
+                value: claim.Id
+            }));
+        } else if (error) {
+            this.showToast('Error', 'Failed to load denied claims', 'error');
+        }
+    }
+
+    @wire(getReasonPicklistValues)
+    wiredReasons({ error, data }) {
+        if (data) {
+            this.reasonOptions = data.map(reason => ({
+                label: reason,
+                value: reason
+            }));
+        } else if (error) {
+            this.showToast('Error', 'Failed to load reason options', 'error');
+        }
+    }
 
     handleChange(event) {
         const field = event.target.dataset.field;
@@ -14,33 +43,37 @@ export default class AppealForm extends LightningElement {
     }
 
     handleSubmit() {
+        if (!this.selectedClaim || !this.selectedReason) {
+            this.showToast('Error', 'Please select a claim and reason.', 'error');
+            return;
+        }
+
         const appealRecord = {
-            Reason__c: this.reason,
+            Claim__c: this.selectedClaim,
+            Reason__c: this.selectedReason,
             Comments__c: this.comments,
-            Has_Attachment__c: this.hasAttachment
+            Has_Attachment__c: this.hasAttachment,
+            Status__c: 'Received',
+            Type__c: 'Supplemental Claims'
         };
 
         submitAppeal({ newAppeal: appealRecord })
             .then((result) => {
-                this.appealId = result.Id; // Store appeal ID for file upload
-                this.dispatchEvent(new ShowToastEvent({
-                    title: 'Success',
-                    message: 'Appeal Submitted Successfully',
-                    variant: 'success'
-                }));
+                this.appealId = result.Id;
+                this.showToast('Success', 'Appeal Submitted Successfully', 'success');
 
-                // Reset form
-                this.reason = '';
+                this.selectedClaim = '';
+                this.selectedReason = '';
                 this.comments = '';
                 this.hasAttachment = false;
             })
             .catch(error => {
-                this.dispatchEvent(new ShowToastEvent({
-                    title: 'Error',
-                    message: error.body.message,
-                    variant: 'error'
-                }));
+                this.showToast('Error', error.body.message, 'error');
             });
+    }
+
+    showToast(title, message, variant) {
+        this.dispatchEvent(new ShowToastEvent({ title, message, variant }));
     }
 
     handleFileUpload(event) {

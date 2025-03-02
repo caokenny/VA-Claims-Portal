@@ -1,9 +1,39 @@
 <template>
     <lightning-card title="Submit an Appeal">
         <div class="slds-p-around_medium">
-            <lightning-input label="Reason" value={reason} onchange={handleChange} data-field="Reason__c"></lightning-input>
-            <lightning-textarea label="Comments" value={comments} onchange={handleChange} data-field="Comments__c"></lightning-textarea>
-            <lightning-input type="checkbox" label="Has Attachment?" checked={hasAttachment} onchange={handleChange} data-field="Has_Attachment__c"></lightning-input>
+            <lightning-combobox 
+                label="Select Denied Claim"
+                options={claimOptions}
+                value={selectedClaim}
+                onchange={handleChange}
+                data-field="selectedClaim"
+                placeholder="Choose a claim"
+                required>
+            </lightning-combobox>
+
+            <lightning-combobox 
+                label="Reason" 
+                value={selectedReason} 
+                options={reasonOptions} 
+                onchange={handleChange} 
+                data-field="selectedReason"
+                required>
+            </lightning-combobox>
+
+            <lightning-textarea 
+                label="Comments" 
+                value={comments} 
+                onchange={handleChange} 
+                data-field="comments">
+            </lightning-textarea>
+
+            <lightning-input 
+                type="checkbox" 
+                label="Has Attachment?" 
+                checked={hasAttachment} 
+                onchange={handleChange} 
+                data-field="hasAttachment">
+            </lightning-input>
 
             <lightning-file-upload
                 label="Upload Attachment"
@@ -13,7 +43,11 @@
                 multiple>
             </lightning-file-upload>
 
-            <lightning-button label="Submit Appeal" onclick={handleSubmit} variant="brand"></lightning-button>
+            <lightning-button 
+                label="Submit Appeal" 
+                onclick={handleSubmit} 
+                variant="brand">
+            </lightning-button>
         </div>
     </lightning-card>
 </template>
