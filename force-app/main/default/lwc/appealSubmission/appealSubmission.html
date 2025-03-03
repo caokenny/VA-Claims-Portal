@@ -36,11 +36,11 @@
             </lightning-input>
 
             <lightning-file-upload
-                label="Upload Attachment"
+                label="Attach Supporting Documents"
                 name="fileUploader"
-                record-id={appealId}
-                onuploadfinished={handleFileUpload}
-                multiple>
+                multiple
+                record-id={appealRecordId} 
+                onuploadfinished={handleFileUpload}>
             </lightning-file-upload>
 
             <lightning-button 

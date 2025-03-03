@@ -2,6 +2,7 @@ import { LightningElement, track, wire } from 'lwc';
 import getDeniedClaims from '@salesforce/apex/AppealSubmissionController.getDeniedClaims';
 import getReasonPicklistValues from '@salesforce/apex/AppealSubmissionController.getReasonPicklistValues';
 import submitAppeal from '@salesforce/apex/AppealSubmissionController.submitAppeal';
+import createContentDocumentLink from '@salesforce/apex/AppealSubmissionController.createContentDocumentLink';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class AppealForm extends LightningElement {
@@ -12,12 +13,13 @@ export default class AppealForm extends LightningElement {
     @track comments = '';
     @track hasAttachment = false;
     @track appealId;
+    uploadedFiles = [];
 
     @wire(getDeniedClaims)
     wiredClaims({ error, data }) {
         if (data) {
             this.claimOptions = data.map(claim => ({
-                label: claim.Name,   // Display the claim Name field
+                label: claim.Name,
                 value: claim.Id
             }));
         } else if (error) {
@@ -42,7 +44,11 @@ export default class AppealForm extends LightningElement {
         this[field] = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     }
 
-    handleSubmit() {
+    handleFileUpload(event) {
+        this.uploadedFiles = event.detail.files.map(file => file.documentId);
+    }
+
+    async handleSubmit() {
         if (!this.selectedClaim || !this.selectedReason) {
             this.showToast('Error', 'Please select a claim and reason.', 'error');
             return;
@@ -57,31 +63,32 @@ export default class AppealForm extends LightningElement {
             Type__c: 'Supplemental Claims'
         };
 
-        submitAppeal({ newAppeal: appealRecord })
-            .then((result) => {
-                this.appealId = result.Id;
-                this.showToast('Success', 'Appeal Submitted Successfully', 'success');
+        try {
+            const result = await submitAppeal({ newAppeal: appealRecord });
+            this.appealId = result.Id;
 
-                this.selectedClaim = '';
-                this.selectedReason = '';
-                this.comments = '';
-                this.hasAttachment = false;
-            })
-            .catch(error => {
-                this.showToast('Error', error.body.message, 'error');
-            });
+            if (this.uploadedFiles.length > 0) {
+                await Promise.all(this.uploadedFiles.map(fileId =>
+                    createContentDocumentLink({ contentDocumentId: fileId, relatedRecordId: this.appealId })
+                ));
+            }
+
+            this.resetForm();
+            this.showToast('Success', 'Appeal Submitted Successfully', 'success');
+        } catch (error) {
+            this.showToast('Error', error.body?.message || 'Error submitting appeal', 'error');
+        }
+    }
+
+    resetForm() {
+        this.selectedClaim = '';
+        this.selectedReason = '';
+        this.comments = '';
+        this.hasAttachment = false;
+        this.uploadedFiles = [];
     }
 
     showToast(title, message, variant) {
         this.dispatchEvent(new ShowToastEvent({ title, message, variant }));
-    }
-
-    handleFileUpload(event) {
-        const uploadedFiles = event.detail.files;
-        this.dispatchEvent(new ShowToastEvent({
-            title: 'Success',
-            message: uploadedFiles.length + ' file(s) uploaded successfully.',
-            variant: 'success'
-        }));
     }
 }
