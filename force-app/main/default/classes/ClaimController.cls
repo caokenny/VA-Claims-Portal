@@ -35,6 +35,16 @@ public with sharing class ClaimController {
     
         insert newClaim;
         return newClaim.Id;
-    }    
+    }   
+    
+    @AuraEnabled
+    public static void createContentDocumentLink(Id contentDocumentId, Id relatedRecordId) {
+        ContentDocumentLink link = new ContentDocumentLink();
+        link.ContentDocumentId = contentDocumentId;
+        link.LinkedEntityId = relatedRecordId;
+        link.ShareType = 'V'; // View access
+        link.Visibility = 'AllUsers';
+        insert link;
+    }
     
 }

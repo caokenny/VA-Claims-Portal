@@ -43,12 +43,13 @@
 
             <!-- File Upload -->
             <lightning-file-upload
-                label="Attach Supporting Documents"
-                name="fileUploader"
-                multiple
-                record-id={claimantId}>
+            label="Attach Supporting Documents"
+            name="fileUploader"
+            multiple
+            record-id={claimRecordId} 
+            onuploadfinished={handleFileUpload}>
             </lightning-file-upload>
-
+            
             <!-- Submit Button -->
             <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="slds-m-top_medium"></lightning-button>
         </div>

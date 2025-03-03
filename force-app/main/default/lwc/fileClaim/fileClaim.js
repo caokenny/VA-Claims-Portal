@@ -2,6 +2,7 @@ import { LightningElement, track, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import USER_ID from '@salesforce/user/Id';
 import getClaimTypes from '@salesforce/apex/ClaimController.getClaimTypes';
+import createContentDocumentLink from '@salesforce/apex/ClaimController.createContentDocumentLink';
 import createClaim from '@salesforce/apex/ClaimController.createClaim';
 import getOrCreateClaimantForUser from '@salesforce/apex/ClaimController.getOrCreateClaimantForUser';
 
@@ -10,6 +11,8 @@ export default class FileClaim extends LightningElement {
     @track selectedType = '';
     @track showFields = {};
     @track claimantId;
+    @track claimRecordId;
+    uploadedFiles = [];
 
     claimRecord = {
         Type__c: '',
@@ -23,7 +26,6 @@ export default class FileClaim extends LightningElement {
         Claimant__c: ''
     };
 
-    // Map API values correctly
     claimTypeOptions = [
         { label: 'Disability Compensation', value: 'Disability Compensation' },
         { label: 'Pension', value: 'Pension' },
@@ -32,7 +34,6 @@ export default class FileClaim extends LightningElement {
         { label: 'Housing Assistance', value: 'Housing Assistance' }
     ];
 
-    // Get or create Claimant record for logged-in user
     @wire(getOrCreateClaimantForUser, { userId: USER_ID })
     wiredClaimant({ data, error }) {
         if (data) {
@@ -65,13 +66,16 @@ export default class FileClaim extends LightningElement {
         this.claimRecord[event.target.name] = event.target.value;
     }
 
+    handleFileUpload(event) {
+        this.uploadedFiles = event.detail.files.map(file => file.documentId);
+    }
+
     handleSubmit() {
         console.log('Submitting claim...');
         console.log('Selected Claim Type:', this.selectedType);
         console.log('Claimant ID:', this.claimantId);
 
         if (!this.selectedType) {
-            console.error('Error: Claim Type is missing.');
             this.dispatchEvent(new ShowToastEvent({
                 title: 'Error',
                 message: 'Please select a claim type before submitting.',
@@ -81,14 +85,22 @@ export default class FileClaim extends LightningElement {
         }
 
         const claimRecord = {
-            Type__c: this.selectedType,  // Use the correct API name
+            Type__c: this.selectedType,
             Claimant__c: this.claimantId,
-            Status__c: 'Received'  // Auto-set status
+            Status__c: 'Received'
         };
 
         createClaim({ newClaim: claimRecord })
             .then(result => {
-                console.log('Claim created successfully:', result);
+                this.claimRecordId = result; 
+                console.log('Claim created successfully:', this.claimRecordId);
+
+                if (this.uploadedFiles.length > 0) {
+                    this.uploadedFiles.forEach(fileId => {
+                        this.linkFileToClaim(fileId, this.claimRecordId);
+                    });
+                }
+
                 this.dispatchEvent(new ShowToastEvent({
                     title: 'Success',
                     message: 'Claim filed successfully!',
@@ -102,6 +114,16 @@ export default class FileClaim extends LightningElement {
                     message: 'Failed to file claim. Please try again.',
                     variant: 'error'
                 }));
+            });
+    }
+
+    linkFileToClaim(fileId, claimId) {
+        createContentDocumentLink({ contentDocumentId: fileId, relatedRecordId: claimId })
+            .then(() => {
+                console.log('File linked to Claim successfully');
+            })
+            .catch(error => {
+                console.error('Error linking file:', error);
             });
     }
 }
