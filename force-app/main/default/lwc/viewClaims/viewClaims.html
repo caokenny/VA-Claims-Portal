@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="My Claims" icon-name="custom:custom63">
+        <template if:true={claims}>
+            <lightning-datatable
+                key-field="Id"
+                data={claims}
+                columns={columns}>
+            </lightning-datatable>
+        </template>
+        <template if:false={claims}>
+            <p class="slds-text-align_center">No claims found.</p>
+        </template>
+    </lightning-card>
+</template>
