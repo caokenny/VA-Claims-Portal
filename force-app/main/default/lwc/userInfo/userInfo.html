@@ -52,6 +52,16 @@
         onchange={handleInputChange}
         disabled={isViewMode}
       ></lightning-combobox>
+      <template if:true={showDischargeType}>
+        <lightning-combobox
+          label="Discharge Type"
+          value={claimant.Discharge_Type__c}
+          options={dischargeOptions}
+          data-field="Discharge_Type__c"
+          onchange={handleInputChange}
+          disabled={isViewMode}
+        ></lightning-combobox>
+      </template>
       <template if:false={isViewMode}>
         <lightning-button
           label="Save"
