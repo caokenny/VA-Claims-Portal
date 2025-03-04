@@ -1,0 +1,4 @@
+.disabled-step {
+  pointer-events: none; /* Disables clicking */
+  cursor: default; /* Prevents the cursor from changing to a pointer */
+}
