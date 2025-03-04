@@ -34,6 +34,7 @@ export default class ClaimantDetails extends LightningElement {
   handleCancel() {
     this.isViewMode = true; // Disable fields again
     this.claimant = { ...this.originalClaimant }; // Restore original values
+    this.showDischargeType = this.claimant.Veteran_Status__c === "Discharged";
   }
 
   handleInputChange(event) {
