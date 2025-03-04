@@ -1,4 +1,35 @@
+.progress-container {
+  padding: 10px;
+}
+
+.step {
+  color: gray;
+}
+
+.active-step {
+  font-weight: bold;
+  color: #0070d2; /* Salesforce blue */
+}
+
 .disabled-step {
-  pointer-events: none; /* Disables clicking */
-  cursor: default; /* Prevents the cursor from changing to a pointer */
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.6;
+}
+
+.claim-details {
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  text-align: center;
 }
