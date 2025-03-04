@@ -1,0 +1,20 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="faqList" type="List" default="[
+        {'question': 'How do I file a claim?', 'answer': 'You can file a claim by clicking on the File Claim button on the navigation bar.'},
+        {'question': 'What is the processing time?', 'answer': 'Claims are typically processed within 5-7 business days.'},
+        {'question': 'Can I check my claim status?', 'answer': 'Yes, go to Your Claims on the navigation bar to check the status.'},
+        {'question': 'What documents (or evidence) will I need to support my claim?', 'answer': 'When you file a VA disability claim, you will need to submit evidence to support that your claimed condition is associated with an in-service event or injury. Evidence could include VA or private medical and/or hospital records, as well as supportings statements from family, friends, or coworkers.'},
+        {'question': '', 'answer': ''}
+        
+    ]"/>
+    
+    <div class="faq-container">
+        <h1>Frequently Asked Questions</h1>
+        <aura:iteration items="{!v.faqList}" var="faq">
+            <div class="faq-item">
+                <h3 onclick="{!c.toggleAnswer}">{!faq.question}</h3>
+                <p class="faq-answer hide">{!faq.answer}</p>
+            </div>
+        </aura:iteration>
+    </div>
+</aura:component>

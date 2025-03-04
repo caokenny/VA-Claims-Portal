@@ -1,0 +1,22 @@
+.THIS .faq-container {
+    padding: 20px;
+}
+
+.THIS h1 {
+    font-size: x-large;
+}
+
+.THIS .faq-item h3 {
+    cursor: pointer;
+    color: #0070D2;
+    font-size: large;
+}
+
+.THIS .faq-answer {
+    margin-left: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+.THIS .hide {
+    display: none;
+}
