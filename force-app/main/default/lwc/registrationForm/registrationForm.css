@@ -1,0 +1,8 @@
+/* Input container to match Salesforce login */
+.input-container {
+  margin-bottom: 10px;
+  padding: 12px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
