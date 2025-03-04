@@ -1,0 +1,161 @@
+/* Custom styling for the recent claim card */
+.recent-claim-card {
+    background-color: #ffffff; /* White background for the card */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Styling for the claim details section */
+.claim-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns layout */
+    gap: 20px;
+}
+
+/* Styling for each information box */
+.info-box {
+    background-color: #f4f6f9; /* Light gray background */
+    border: 1px solid #e0e0e0; /* Light border */
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-box span {
+    font-size: 14px;
+    color: #333; /* Dark gray text */
+    font-weight: normal;
+}
+
+/* Styling for the title inside each box */
+.info-box strong {
+    font-size: 16px;
+    color: #1d72b8; /* Blue color for labels */
+}
+
+/* Status color classes */
+.slds-text-color_success {
+    color: #2e7d32; /* Green for approved status */
+}
+
+.slds-text-color_error {
+    color: #c62828; /* Red for denied status */
+}
+
+.slds-text-color_warning {
+    color: #ff9800; /* Orange for pending status */
+}
+
+.slds-text-color_default {
+    color: #555555; /* Default color */
+}
+
+/* Error Message Styling */
+.slds-text-color_error {
+    font-size: 14px;
+    color: #c62828; /* Red for error */
+    background-color: #ffebee; /* Light red background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+/* Flex container for quick actions
+.quick-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+} */
+
+/* Container for claim statistics */
+.claim-statistics {
+    margin-bottom: 20px;
+}
+
+/* Flex container for stats */
+.stats-container {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    color: #777; /* Lighter text color */
+}
+
+.stats-container div {
+    flex: 1; /* Equal space for each stat */
+    text-align: center;
+}
+
+/* Background color gradient for the card */
+.recent-claim-card {
+    background: linear-gradient(to bottom right, #f4f6f9, #ffffff); /* Gradient from light to white */
+}
+
+
+/* Custom styling for the recent claim card */
+.recent-claim-card {
+    background-color: #ffffff; /* White background for the card */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+
+/* Styling for the claim details section */
+.claim-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns layout */
+    gap: 20px;
+}
+
+/* Styling for each information box */
+.info-box {
+    background-color: #f4f6f9; /* Light gray background */
+    border: 1px solid #e0e0e0; /* Light border */
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-box span {
+    font-size: 14px;
+    color: #333; /* Dark gray text */
+    font-weight: normal;
+}
+
+/* Styling for the title inside each box */
+.info-box strong {
+    font-size: 16px;
+    color: #1d72b8; /* Blue color for labels */
+}
+
+/* Status color classes */
+.slds-text-color_success {
+    color: #2e7d32; /* Green for approved status */
+}
+
+.slds-text-color_error {
+    color: #c62828; /* Red for denied status */
+}
+
+.slds-text-color_warning {
+    color: #ff9800; /* Orange for pending status */
+}
+
+.slds-text-color_default {
+    color: #555555; /* Default color */
+}
+
+/* Error Message Styling */
+.slds-text-color_error {
+    font-size: 14px;
+    color: #c62828; /* Red for error */
+    background-color: #ffebee; /* Light red background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
