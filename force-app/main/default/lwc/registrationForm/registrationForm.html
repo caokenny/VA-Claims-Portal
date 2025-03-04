@@ -1,70 +1,104 @@
 <template>
-  <lightning-card title="User Registration">
-    <lightning-input
-      type="text"
-      label="First Name"
-      value={firstName}
-      onchange={handleInputChange}
-      data-id="firstName"
-    ></lightning-input>
-    <lightning-input
-      type="text"
-      label="Last Name"
-      value={lastName}
-      onchange={handleInputChange}
-      data-id="lastName"
-    ></lightning-input>
-    <lightning-input
-      type="email"
-      label="Email"
-      value={email}
-      onchange={handleInputChange}
-      data-id="email"
-    ></lightning-input>
-    <lightning-input
-      type="text"
-      label="Phone"
-      value={phone}
-      onchange={handleInputChange}
-      data-id="phone"
-    ></lightning-input>
-    <lightning-input
-      type="password"
-      label="Password"
-      value={password}
-      onchange={handleInputChange}
-      data-id="password"
-    ></lightning-input>
-    <lightning-input
-      type="date"
-      date-style="short"
-      label="Date of Birth"
-      value={dateOfBirth}
-      onchange={handleInputChange}
-      data-id="dateOfBirth"
-    ></lightning-input>
-    <lightning-combobox
-      label="Military Branch"
-      value={militaryBranch}
-      options={branches}
-      data-id="militaryBranch"
-      onchange={handleInputChange}
-    ></lightning-combobox>
-    <lightning-combobox
-      label="Veteran Status"
-      value={veteranStatus}
-      options={status}
-      data-id="veteranStatus"
-      onchange={handleInputChange}
-    ></lightning-combobox>
-    <template if:true={showDischargeType}>
-      <lightning-combobox
-        label="Discharge Type"
-        value={dischargeType}
-        options={dischargeOptions}
-        data-id="dischargeType"
+  <div class="slds-form-element">
+    <div class="input-container">
+      <lightning-input
+        type="text"
+        placeholder="First Name"
+        value={firstName}
         onchange={handleInputChange}
+        data-id="firstName"
+        variant="label-hidden"
+        required
+      ></lightning-input>
+    </div>
+    <div class="input-container">
+      <lightning-input
+        type="text"
+        placeholder="Last Name"
+        value={lastName}
+        onchange={handleInputChange}
+        data-id="lastName"
+        variant="label-hidden"
+        required
+      ></lightning-input>
+    </div>
+    <div class="input-container">
+      <lightning-input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onchange={handleInputChange}
+        data-id="email"
+        variant="label-hidden"
+        required
+      ></lightning-input>
+    </div>
+    <div class="input-container">
+      <lightning-input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onchange={handleInputChange}
+        data-id="password"
+        variant="label-hidden"
+        required
+      ></lightning-input>
+    </div>
+    <div class="input-container">
+      <lightning-input
+        type="text"
+        placeholder="Phone"
+        value={phone}
+        onchange={handleInputChange}
+        data-id="phone"
+        variant="label-hidden"
+      ></lightning-input>
+    </div>
+    <div class="input-container">
+      <lightning-input
+        type="date"
+        date-style="short"
+        placeholder="Date of Birth"
+        value={dateOfBirth}
+        onchange={handleInputChange}
+        data-id="dateOfBirth"
+        variant="label-hidden"
+        required
+      ></lightning-input>
+    </div>
+    <div class="input-container">
+      <lightning-combobox
+        placeholder="Military Branch"
+        value={militaryBranch}
+        options={branches}
+        data-id="militaryBranch"
+        onchange={handleInputChange}
+        variant="label-hidden"
+        required
       ></lightning-combobox>
+    </div>
+    <div class="input-container">
+      <lightning-combobox
+        placeholder="Veteran Status"
+        value={veteranStatus}
+        options={status}
+        data-id="veteranStatus"
+        onchange={handleInputChange}
+        variant="label-hidden"
+        required
+      ></lightning-combobox>
+    </div>
+    <template if:true={showDischargeType}>
+      <div class="input-container">
+        <lightning-combobox
+          placeholder="Discharge Type"
+          value={dischargeType}
+          options={dischargeOptions}
+          data-id="dischargeType"
+          onchange={handleInputChange}
+          variant="label-hidden"
+        ></lightning-combobox>
+      </div>
     </template>
     <lightning-button
       label="Register"
@@ -73,5 +107,5 @@
     <template if:true={errorMessage}>
       <p class="error-message">{errorMessage}</p>
     </template>
-  </lightning-card>
+  </div>
 </template>
