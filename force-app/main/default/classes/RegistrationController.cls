@@ -19,6 +19,7 @@ public without sharing class RegistrationController {
         LastName = lastName,
         FirstName = firstName,
         Alias = firstName.substring(0, 2).toLowerCase(),
+        CommunityNickname = firstName + ' ' + lastName,
         ProfileId = [SELECT Id FROM Profile WHERE Name = 'Claims User' LIMIT 1]
         .Id,
         TimeZoneSidKey = 'America/New_York',
