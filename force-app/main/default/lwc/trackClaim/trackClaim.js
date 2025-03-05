@@ -10,6 +10,14 @@ export default class TrackClaim extends LightningElement {
   currentStep = "Received";
   files = [];
 
+  steps = [
+    { label: "Received", value: "Received", class: "step" },
+    { label: "Under Review", value: "Under Review", class: "step" },
+    { label: "Evidence Gathering", value: "Evidence Gathering", class: "step" },
+    { label: "Decision Pending", value: "Decision Pending", class: "step" },
+    { label: "Decision Made", value: "Decision Made", class: "step" }
+  ];
+
   connectedCallback() {
     const params = new URLSearchParams(window.location.search);
     this.claimId = params.get("claimId");
@@ -35,27 +43,8 @@ export default class TrackClaim extends LightningElement {
 
   updateFieldVisibility() {
     this.showFields = {
-      disability: [
-        "Healthcare Benefits",
-        "Pension",
-        "Disability Compensation"
-      ].includes(this.claim.Type__c),
-      dateOfInjury: [
-        "Healthcare Benefits",
-        "Pension",
-        "Disability Compensation"
-      ].includes(this.claim.Type__c),
-      annualIncome: [
-        "Healthcare Benefits",
-        "Housing Assistance",
-        "Pension",
-        "Education & Training",
-        "Disability Compensation"
-      ].includes(this.claim.Type__c),
-      currentlyHomeless: this.claim.Type__c === "Housing Assistance",
-      housingStatus: this.claim.Type__c === "Housing Assistance",
-      educationType: this.claim.Type__c === "Education & Training",
-      institutionName: this.claim.Type__c === "Education & Training"
+      annualIncome: ["Healthcare Benefits", "Housing Assistance", "Pension", "Education & Training", "Disability Compensation"].includes(this.claim.Type__c),
+      housingStatus: this.claim.Type__c === "Housing Assistance"
     };
   }
 
@@ -67,6 +56,13 @@ export default class TrackClaim extends LightningElement {
       "Decision Pending": "Decision Pending",
       "Decision Made": "Decision Made"
     };
+
     this.currentStep = statusMap[this.claim.Status__c] || "Received";
+
+    // Update step classes dynamically
+    this.steps = this.steps.map((step) => ({
+      ...step,
+      class: step.value === this.currentStep ? "step active-step" : "step disabled-step"
+    }));
   }
 }

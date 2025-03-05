@@ -1,63 +1,46 @@
 <template>
   <lightning-card title="Track Claim">
     <template if:true={claim}>
-      <lightning-progress-indicator
-        current-step={currentStep}
-        type="path"
-        variant="base"
-      >
-        <lightning-progress-step
-          label="Received"
-          value="Received"
-          class="disabled-step"
-        ></lightning-progress-step>
-        <lightning-progress-step
-          label="Under Review"
-          value="Under Review"
-          class="disabled-step"
-        ></lightning-progress-step>
-        <lightning-progress-step
-          label="Evidence Gathering"
-          value="Evidence Gathering"
-          class="disabled-step"
-        ></lightning-progress-step>
-        <lightning-progress-step
-          label="Decision Pending"
-          value="Decision Pending"
-          class="disabled-step"
-        ></lightning-progress-step>
-        <lightning-progress-step
-          label="Decision Made"
-          value="Decision Made"
-          class="disabled-step"
-        ></lightning-progress-step>
-      </lightning-progress-indicator>
-      <p><b>Claim ID:</b> {claim.Name}</p>
-      <template if:true={showFields.disability}>
-        <p><b>Disability:</b> {claim.Disability__c}</p>
-      </template>
+      <div class="progress-container">
+        <lightning-progress-indicator current-step={currentStep} type="path">
+          <template for:each={steps} for:item="step">
+            <lightning-progress-step
+              key={step.value}
+              label={step.label}
+              value={step.value}
+              class={step.class}
+            ></lightning-progress-step>
+          </template>
+        </lightning-progress-indicator>
+      </div>
 
-      <template if:true={showFields.dateOfInjury}>
-        <p><b>Date of Injury:</b> {claim.Date_Of_Injury__c}</p>
-      </template>
+      <div class="claim-details">
+        <lightning-layout multiple-rows>
+          <lightning-layout-item size="12" padding="around-small">
+            <p><b>Claim ID:</b> {claim.Name}</p>
+          </lightning-layout-item>
+          
+          <template if:true={showFields.annualIncome}>
+            <lightning-layout-item size="12" padding="around-small">
+              <p><b>Annual Income:</b> {claim.Income__c}</p>
+            </lightning-layout-item>
+          </template>
 
-      <template if:true={showFields.annualIncome}>
-        <p><b>Annual Income:</b> {claim.Income__c}</p>
-      </template>
+          <template if:true={showFields.housingStatus}>
+            <lightning-layout-item size="12" padding="around-small">
+              <p><b>Housing Status:</b> {claim.Housing_Status__c}</p>
+            </lightning-layout-item>
+          </template>
 
-      <template if:true={showFields.housingStatus}>
-        <p><b>Housing Status:</b> {claim.Housing_Status__c}</p>
-      </template>
+          <lightning-layout-item size="12" padding="around-small">
+            <p><b>Claim Status:</b> {claim.Status__c}</p>
+          </lightning-layout-item>
 
-      <template if:true={showFields.educationType}>
-        <p><b>Education Type:</b> {claim.Education_Type__c}</p>
-      </template>
-
-      <template if:true={showFields.institutionName}>
-        <p><b>Institution Name:</b> {claim.Institution_Name__c}</p>
-      </template>
-      <p><b>Claim Status:</b> {claim.Status__c}</p>
-      <p><b>Final Decision:</b> {claim.Final_Decision__c}</p>
+          <lightning-layout-item size="12" padding="around-small">
+            <p><b>Final Decision:</b> {claim.Final_Decision__c}</p>
+          </lightning-layout-item>
+        </lightning-layout>
+      </div>
     </template>
     <template for:each={files} for:item="file">
       <tr key={file.fileUrl}>
@@ -67,7 +50,7 @@
       </tr>
     </template>
     <template if:true={error}>
-      <p>{error}</p>
+      <p class="error-message">{error}</p>
     </template>
   </lightning-card>
 </template>

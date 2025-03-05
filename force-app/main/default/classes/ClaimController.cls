@@ -46,5 +46,14 @@ public with sharing class ClaimController {
         link.Visibility = 'AllUsers';
         insert link;
     }
+
+    @AuraEnabled(cacheable=true)
+    public static List<Claim__c> getUserClaims(Id userId) {
+        return [SELECT Id, Type__c, Status__c, CreatedDate 
+                FROM Claim__c 
+                WHERE Claimant__c IN (SELECT Id FROM Claimant__c WHERE User__c = :userId)
+                ORDER BY CreatedDate DESC 
+                LIMIT 5];
+    }
     
 }
