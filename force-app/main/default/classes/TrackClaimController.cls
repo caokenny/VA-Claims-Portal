@@ -1,35 +1,9 @@
-/**
- * Type__c - Picklist
- * Income__c - Currency
- * Currently_Homeless__c - Checkbox
- * Date_Of_Injury__c - Date
- * Disability__c - Text Area
- * Education_Type__c - Text
- * Has_Attachment__c - Checkbox
- * Housing_Status__c - Picklist
- * Institution_Name__c - Text
- * Pension_Eligilbility__c - Picklist
- * Service_Branch__c - Picklist
- * Service_Entry_Date__c - Date
- * Service_Exit_Date__c - Date
- * Status__c - Picklist
- */
-/**
- *         this.showFields = {
-            disability: ['Healthcare Benefits', 'Pension', 'Disability Compensation'].includes(this.selectedType),
-            dateOfInjury: ['Healthcare Benefits', 'Pension', 'Disability Compensation'].includes(this.selectedType),
-            annualIncome: ['Healthcare Benefits', 'Housing Assistance', 'Pension', 'Education & Training', 'Disability Compensation'].includes(this.selectedType),
-            currentlyHomeless: this.selectedType === 'Housing Assistance',
-            housingStatus: this.selectedType === 'Housing Assistance',
-            educationType: this.selectedType === 'Education & Training',
-            institutionName: this.selectedType === 'Education & Training'
-        };
- */
 public without sharing class TrackClaimController {
   @AuraEnabled(cacheable=true)
   public static Claim__c getClaim(String claimId) {
     Claim__c claim = [
       SELECT
+        Id,
         Name,
         Type__c,
         Income__c,
@@ -52,5 +26,54 @@ public without sharing class TrackClaimController {
     ];
 
     return claim;
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static List<FileWrapper> getAttachments(Id recordId) {
+    List<FileWrapper> attachments = new List<FileWrapper>();
+
+    List<ContentDocumentLink> links = [
+      SELECT ContentDocumentId
+      FROM ContentDocumentLink
+      WHERE LinkedEntityId = :recordId
+    ];
+
+    List<Id> contentDocumentIds = new List<Id>();
+    for (ContentDocumentLink link : links) {
+      contentDocumentIds.add(link.ContentDocumentId);
+    }
+
+    List<ContentVersion> versions = [
+      SELECT Id, Title, ContentDocumentId, FileType
+      FROM ContentVersion
+      WHERE ContentDocumentId IN :contentDocumentIds
+      ORDER BY CreatedDate DESC
+    ];
+
+    for (ContentVersion file : versions) {
+      // String fileUrl = generatePublicFileLink(file.Id);
+      String fileUrl =
+        System.Url.getOrgDomainUrl().toExternalForm() +
+        '/sfc/servlet.shepherd/version/download/' +
+        file.Id;
+      attachments.add(new FileWrapper(file.Title, file.FileType, fileUrl));
+    }
+
+    return attachments;
+  }
+
+  public class FileWrapper {
+    @AuraEnabled
+    public String title;
+    @AuraEnabled
+    public String fileType;
+    @AuraEnabled
+    public String fileUrl;
+
+    public FileWrapper(String title, String fileType, String fileUrl) {
+      this.title = title;
+      this.fileType = fileType;
+      this.fileUrl = fileUrl;
+    }
   }
 }
