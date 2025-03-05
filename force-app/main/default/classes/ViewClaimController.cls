@@ -1,4 +1,4 @@
-public with sharing class ViewClaimController {
+public without sharing class ViewClaimController {
     @AuraEnabled(cacheable=true)
     public static List<Claim__c> getUserClaims() {
         Id userId = UserInfo.getUserId();

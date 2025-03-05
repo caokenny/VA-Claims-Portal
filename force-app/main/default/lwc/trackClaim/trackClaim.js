@@ -1,5 +1,6 @@
 import { LightningElement, wire } from "lwc";
 import getClaim from "@salesforce/apex/TrackClaimController.getClaim";
+import getAttachments from "@salesforce/apex/TrackClaimController.getAttachments";
 
 export default class TrackClaim extends LightningElement {
   claimId;
@@ -7,6 +8,7 @@ export default class TrackClaim extends LightningElement {
   error;
   showFields = {};
   currentStep = "Received";
+  files = [];
 
   steps = [
     { label: "Received", value: "Received", class: "step" },
@@ -29,6 +31,13 @@ export default class TrackClaim extends LightningElement {
       this.setCurrentStep();
     } else if (error) {
       this.error = "Error retrieving claim details";
+    }
+  }
+
+  @wire(getAttachments, { recordId: "$claim.Id" })
+  wiredFiles({ data }) {
+    if (data) {
+      this.files = data;
     }
   }
 

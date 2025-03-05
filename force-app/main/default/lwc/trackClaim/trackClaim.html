@@ -42,7 +42,13 @@
         </lightning-layout>
       </div>
     </template>
-
+    <template for:each={files} for:item="file">
+      <tr key={file.fileUrl}>
+        <td>
+          <a href={file.fileUrl} target="_blank">{file.title}</a>
+        </td>
+      </tr>
+    </template>
     <template if:true={error}>
       <p class="error-message">{error}</p>
     </template>
