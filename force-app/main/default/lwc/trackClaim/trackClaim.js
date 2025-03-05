@@ -37,13 +37,22 @@ export default class TrackClaim extends LightningElement {
   @wire(getAttachments, { recordId: "$claim.Id" })
   wiredFiles({ data }) {
     if (data) {
-      this.files = data;
+      this.files = data.map((file) => ({
+        title: `${file.title}.${file.fileType}`,
+        fileUrl: `${file.fileUrl}`
+      }));
     }
   }
 
   updateFieldVisibility() {
     this.showFields = {
-      annualIncome: ["Healthcare Benefits", "Housing Assistance", "Pension", "Education & Training", "Disability Compensation"].includes(this.claim.Type__c),
+      annualIncome: [
+        "Healthcare Benefits",
+        "Housing Assistance",
+        "Pension",
+        "Education & Training",
+        "Disability Compensation"
+      ].includes(this.claim.Type__c),
       housingStatus: this.claim.Type__c === "Housing Assistance"
     };
   }
@@ -62,7 +71,10 @@ export default class TrackClaim extends LightningElement {
     // Update step classes dynamically
     this.steps = this.steps.map((step) => ({
       ...step,
-      class: step.value === this.currentStep ? "step active-step" : "step disabled-step"
+      class:
+        step.value === this.currentStep
+          ? "step active-step"
+          : "step disabled-step"
     }));
   }
 }
