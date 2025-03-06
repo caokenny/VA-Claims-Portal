@@ -1,7 +1,10 @@
 import { LightningElement } from "lwc";
+import { NavigationMixin } from "lightning/navigation";
 import registerUser from "@salesforce/apex/RegistrationController.registerUser";
 
-export default class RegistrationForm extends LightningElement {
+export default class RegistrationForm extends NavigationMixin(
+  LightningElement
+) {
   firstName = "";
   lastName = "";
   email = "";
@@ -69,11 +72,18 @@ export default class RegistrationForm extends LightningElement {
         veteranStatus: this.veteranStatus,
         dischargeType: this.dischargeType
       });
-      if (result === "/s/login") {
-        this.errorMessage = "User registered successfully!";
-        window.location.href = result;
+      if (result.success) {
+        this.errorMessage = result.message;
+        console.log("Sucess: " + this.errorMessage);
+        console.log("Redirect: " + result.redirect);
+        this[NavigationMixin.Navigate]({
+          type: "standard__webPage",
+          attributes: {
+            url: result.redirect
+          }
+        });
       } else {
-        this.errorMessage = result;
+        this.errorMessage = result.message;
       }
     } catch (error) {
       this.errorMessage =
