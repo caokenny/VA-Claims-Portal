@@ -1,6 +1,6 @@
 public without sharing class RegistrationController {
-  @AuraEnabled(cacheable=false)
-  public static String registerUser(
+  @AuraEnabled
+  public static Map<String, Object> registerUser(
     String firstName,
     String lastName,
     String email,
@@ -11,24 +11,27 @@ public without sharing class RegistrationController {
     String veteranStatus,
     String dischargeType
   ) {
+    Map<String, Object> response = new Map<String, Object>();
     try {
       // Create User record with a lookup to Claimant__c
       User newUser = new User(
+        FirstName = firstName,
+        LastName = lastName,
         Email = email,
         Username = email,
-        LastName = lastName,
-        FirstName = firstName,
         Alias = firstName.substring(0, 2).toLowerCase(),
         CommunityNickname = firstName + ' ' + lastName,
         ProfileId = [SELECT Id FROM Profile WHERE Name = 'Claims User' LIMIT 1]
         .Id,
-        TimeZoneSidKey = 'America/New_York',
-        LocaleSidKey = 'en_US',
+        TimeZoneSidKey = UserInfo.getTimeZone().getID(),
+        LocaleSidKey = UserInfo.getLocale(),
         EmailEncodingKey = 'UTF-8',
-        LanguageLocaleKey = 'en_US'
+        LanguageLocaleKey = UserInfo.getLocale(),
+        IsActive = true
       );
 
       insert newUser;
+      System.debug('User created with ID: ' + newUser.Id);
 
       // Create Claimant record
       Claimant__c newClaimant = new Claimant__c(
@@ -44,14 +47,34 @@ public without sharing class RegistrationController {
       );
 
       insert newClaimant;
+      System.debug('Claimant__c created with ID: ' + newClaimant.Id);
 
       // Set the password for the user
       System.setPassword(newUser.Id, password);
       // System.resetPassword(newUser.Id, true);
 
-      return '/s/login';
+      update newUser;
+      // System.debug('Password successfully set for new user.');
+
+      // UserLogin login = [SELECT Id, IsPasswordLocked FROM UserLogin WHERE UserId = :newUser.Id LIMIT 1];
+      // UserLogin userLogin = new UserLogin
+
+      // if (login.IsPasswordLocked) {
+      //   login.IsPasswordLocked = false;
+      //   update login;
+      // }
+
+      PageReference login = Site.login(newUser.Username, password, '/s');
+      System.debug('User logged in successfully.');
+
+      response.put('success', true);
+      response.put('message', 'User registered successfully.');
+      response.put('redirect', login.getUrl());
     } catch (Exception e) {
-      return 'Error: ' + e.getMessage();
+      response.put('success', false);
+      response.put('message', e.getMessage());
     }
+
+    return response;
   }
 }
