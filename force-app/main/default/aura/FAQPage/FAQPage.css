@@ -1,22 +1,77 @@
 .THIS .faq-container {
-    padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .THIS h1 {
-    font-size: x-large;
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.THIS .faq-item {
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
 }
 
 .THIS .faq-item h3 {
-    cursor: pointer;
-    color: #0070D2;
-    font-size: large;
+  cursor: pointer;
+  color: #0070d2;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: color 0.3s ease-in-out;
+}
+
+.THIS .faq-item h3:hover {
+  color: #0056a3;
+  text-decoration: underline;
 }
 
 .THIS .faq-answer {
-    margin-left: 10px;
-    transition: all 0.3s ease-in-out;
+  margin-left: 10px;
+  font-size: 1rem;
+  color: #444;
+  background: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px;
+  display: none;
+  transition: max-height 0.3s ease-out;
 }
 
-.THIS .hide {
-    display: none;
+.THIS .faq-answer.show {
+  display: block;
+}
+
+.THIS .faq-item h3::after {
+  content: "▼";
+  font-size: 1rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.THIS .faq-item.open h3::after {
+  transform: rotate(180deg);
+}
+
+.THIS .faq-answer {
+  margin-left: 10px;
+  font-size: 1rem;
+  color: #444;
+  background: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px;
+  display: none; /* Default hidden */
+  transition: max-height 0.3s ease-out;
+}
+
+.THIS .faq-answer.show {
+  display: block; /* Show when the class is added */
 }

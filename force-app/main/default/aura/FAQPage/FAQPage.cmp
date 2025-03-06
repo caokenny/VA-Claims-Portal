@@ -1,20 +1,25 @@
-<aura:component implements="forceCommunity:availableForAllPageTypes" access="global">
-    <aura:attribute name="faqList" type="List" default="[
-        {'question': 'How do I file a claim?', 'answer': 'You can file a claim by clicking on the File Claim button on the navigation bar.'},
-        {'question': 'What is the processing time?', 'answer': 'Claims are typically processed within 5-7 business days.'},
-        {'question': 'Can I check my claim status?', 'answer': 'Yes, go to Your Claims on the navigation bar to check the status.'},
-        {'question': 'What documents (or evidence) will I need to support my claim?', 'answer': 'When you file a VA disability claim, you will need to submit evidence to support that your claimed condition is associated with an in-service event or injury. Evidence could include VA or private medical and/or hospital records, as well as supportings statements from family, friends, or coworkers.'},
-        {'question': '', 'answer': ''}
-        
-    ]"/>
-    
-    <div class="faq-container">
-        <h1>Frequently Asked Questions</h1>
-        <aura:iteration items="{!v.faqList}" var="faq">
-            <div class="faq-item">
-                <h3 onclick="{!c.toggleAnswer}">{!faq.question}</h3>
-                <p class="faq-answer hide">{!faq.answer}</p>
-            </div>
-        </aura:iteration>
-    </div>
+<aura:component
+  implements="forceCommunity:availableForAllPageTypes"
+  access="global"
+>
+  <aura:attribute
+    name="faqList"
+    type="List"
+    default="[
+        {'question': 'How do I file a claim?', 'answer': 'You can file a claim by visiting the File Claim section and following the steps.'},
+        {'question': 'What is the processing time?', 'answer': 'Processing times vary, but it typically takes 30-90 days.'},
+        {'question': 'Can I check my claim status?', 'answer': 'Yes, you can check your claim status under the Your Claims section.'},
+        {'question': 'What documents (or evidence) will I need to support my claim?', 'answer': 'You will need supporting medical records, service documents, and other relevant proof.'}
+    ]"
+  />
+
+  <div class="faq-container">
+    <h1>Frequently Asked Questions</h1>
+    <aura:iteration items="{!v.faqList}" var="faq" indexVar="index">
+      <div class="faq-item" data-index="{!index}" onclick="{!c.toggleAnswer}">
+        <h3>{!faq.question}</h3>
+        <p class="faq-answer hide">{!faq.answer}</p>
+      </div>
+    </aura:iteration>
+  </div>
 </aura:component>
