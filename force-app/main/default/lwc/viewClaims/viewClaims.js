@@ -3,11 +3,20 @@ import getUserClaims from "@salesforce/apex/ViewClaimController.getUserClaims";
 import { NavigationMixin } from "lightning/navigation";
 
 const COLUMNS = [
+  // {
+  //   label: "Claim ID",
+  //   fieldName: "claimLink",
+  //   type: "url",
+  //   typeAttributes: { label: { fieldName: "Name" }, target: "_self" }
+  // },
   {
-    label: "Claim ID",
-    fieldName: "claimLink",
-    type: "url",
-    typeAttributes: { label: { fieldName: "Name" }, target: "_self" }
+    type: "button",
+    initialWidth: 130,
+    typeAttributes: {
+      label: "View Claim",
+      name: "view_claim",
+      variant: "brand"
+    }
   },
   { label: "Claimant", fieldName: "ClaimantName", type: "text" },
   { label: "Type", fieldName: "Type__c", type: "text" },
@@ -33,7 +42,7 @@ export default class ViewClaims extends NavigationMixin(LightningElement) {
     if (data) {
       this.claims = data.map((record) => ({
         ...record,
-        claimLink: `/view-claims/view-claims/track-claim?claimId=${record.Id}`,
+        // claimLink: `/view-claims/view-claims/track-claim?claimId=${record.Id}`,
         pdfLink: `/apex/ClaimPDF?id=${record.Id}`, // Link to the Visualforce PDF page
         ClaimantName: record.Claimant__r
           ? `${record.Claimant__r.First_Name__c} ${record.Claimant__r.Last_Name__c}`
@@ -45,17 +54,19 @@ export default class ViewClaims extends NavigationMixin(LightningElement) {
     }
   }
 
+  handleRowAction(event) {
+    const claimId = event.detail.row.Id;
+    const trackClaimPageUrl = `/s/view-claims/view-claims/track-claim?claimId=${claimId}`;
 
-  // handleRowAction(event) {
-  //     const claimId = event.detail.row.Id;
-  //     this[NavigationMixin.Navigate]({
-  //         type: 'standard__component',
-  //         attributes: {
-  //             componentName: 'c__trackClaim'
-  //         },
-  //         state: {
-  //             c__claimId: claimId
-  //         }
-  //     });
-  // }
+    window.open(trackClaimPageUrl, "_blank");
+    // this[NavigationMixin.Navigate]({
+    //     type: 'standard__component',
+    //     attributes: {
+    //         componentName: 'c__TrackClaim'
+    //     },
+    //     state: {
+    //         c__claimId: claimId
+    //     }
+    // });
+  }
 }

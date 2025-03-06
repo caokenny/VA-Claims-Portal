@@ -1,14 +1,27 @@
-import { LightningElement, wire } from "lwc";
+import { LightningElement, wire, api, track } from "lwc";
+import { CurrentPageReference } from "lightning/navigation";
 import getClaim from "@salesforce/apex/TrackClaimController.getClaim";
 import getAttachments from "@salesforce/apex/TrackClaimController.getAttachments";
 
 export default class TrackClaim extends LightningElement {
-  claimId;
+  @api claimId;
+  @track internalClaimId;
   claim;
   error;
   showFields = {};
   currentStep = "Received";
   files = [];
+
+  @wire(CurrentPageReference)
+  getStateParameters(currentPageReference) {
+    console.log("currentPageReference", currentPageReference);
+    if (currentPageReference && currentPageReference.state.claimId) {
+      this.internalClaimId = currentPageReference.state.claimId;
+    } else {
+      const params = new URLSearchParams(window.location.search);
+      this.internalClaimId = params.get("claimId");
+    }
+  }
 
   steps = [
     { label: "Received", value: "Received", class: "step" },
@@ -18,12 +31,12 @@ export default class TrackClaim extends LightningElement {
     { label: "Decision Made", value: "Decision Made", class: "step" }
   ];
 
-  connectedCallback() {
-    const params = new URLSearchParams(window.location.search);
-    this.claimId = params.get("claimId");
-  }
+  // connectedCallback() {
+  //   const params = new URLSearchParams(window.location.search);
+  //   this.claimId = params.get("claimId");
+  // }
 
-  @wire(getClaim, { claimId: "$claimId" })
+  @wire(getClaim, { claimId: "$internalClaimId" })
   wiredClaim({ error, data }) {
     if (data) {
       this.claim = data;
