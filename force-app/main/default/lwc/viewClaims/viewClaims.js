@@ -15,7 +15,13 @@ const COLUMNS = [
   { label: "Date of Injury", fieldName: "Date_Of_Injury__c", type: "date" },
   { label: "Education Type", fieldName: "Education_Type__c", type: "text" },
   { label: "Disability", fieldName: "Disability__c", type: "text" },
-  { label: "Housing Status", fieldName: "Housing_Status__c", type: "text" }
+  { label: "Housing Status", fieldName: "Housing_Status__c", type: "text" },
+  {
+    label: "Download PDF",
+    fieldName: "pdfLink",
+    type: "url",
+    typeAttributes: { label: "Download", target: "_blank" }
+  }
 ];
 
 export default class ViewClaims extends NavigationMixin(LightningElement) {
@@ -27,8 +33,8 @@ export default class ViewClaims extends NavigationMixin(LightningElement) {
     if (data) {
       this.claims = data.map((record) => ({
         ...record,
-        // claimLink: `/lightning/r/Claim__c/${record.Id}/view`,
-        claimLink: `/view-claims/view-claims/track-claim?claimId=${record.Name}`,
+        claimLink: `/view-claims/view-claims/track-claim?claimId=${record.Id}`,
+        pdfLink: `/apex/ClaimPDF?id=${record.Id}`, // Link to the Visualforce PDF page
         ClaimantName: record.Claimant__r
           ? `${record.Claimant__r.First_Name__c} ${record.Claimant__r.Last_Name__c}`
           : "N/A"
@@ -38,6 +44,7 @@ export default class ViewClaims extends NavigationMixin(LightningElement) {
       this.claims = undefined;
     }
   }
+
 
   // handleRowAction(event) {
   //     const claimId = event.detail.row.Id;

@@ -1,0 +1,11 @@
+<apex:page renderAs="pdf" controller="ViewClaimController">
+    <h1>Claim Details</h1>
+    <p><strong>Claim ID:</strong> {!claim.ID}</p>
+    <p><strong>Claimant Name:</strong> {!claim.Name}</p>
+    <p><strong>Status:</strong> {!claim.Status__c}</p>
+    <p><strong>Type:</strong> {!claim.Type__c}</p>
+    <p><strong>Date of Injury:</strong> {!claim.Date_Of_Injury__c}</p>
+    <p><strong>Education Type:</strong> {!claim.Education_Type__c}</p>
+    <p><strong>Disability:</strong> {!claim.Disability__c}</p>
+    <p><strong>Final Decision:</strong> {!claim.Final_Decision__c}</p>
+</apex:page>
