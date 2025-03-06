@@ -1,93 +1,117 @@
 <template>
   <lightning-card title="My Profile">
     <template if:true={claimant}>
-      <lightning-input
-        type="text"
-        label="First Name"
-        value={claimant.First_Name__c}
-        onchange={handleInputChange}
-        data-field="First_Name__c"
-        disabled={isViewMode}
-      ></lightning-input>
-      <lightning-input
-        label="Last Name"
-        value={claimant.Last_Name__c}
-        onchange={handleInputChange}
-        data-field="Last_Name__c"
-        disabled={isViewMode}
-      ></lightning-input>
-      <lightning-input
-        label="Email"
-        value={claimant.Email_Address__c}
-        onchange={handleInputChange}
-        data-field="Email_Address__c"
-        disabled={isViewMode}
-      ></lightning-input>
-      <lightning-input
-        label="Phone"
-        value={claimant.Phone__c}
-        onchange={handleInputChange}
-        data-field="Phone__c"
-        disabled={isViewMode}
-      ></lightning-input>
-      <lightning-input
-        label="Date Of Birth"
-        value={claimant.DateOfBirth__c}
-        data-field="DateOfBirth__c"
-        disabled="true"
-      ></lightning-input>
-      <lightning-combobox
-        label="Military Branch"
-        value={claimant.Military_Branch__c}
-        options={branches}
-        data-field="Military_Branch__c"
-        onchange={handleInputChange}
-        disabled={isViewMode}
-      ></lightning-combobox>
-      <lightning-combobox
-        label="Veteran Status"
-        value={claimant.Veteran_Status__c}
-        options={status}
-        data-field="Veteran_Status__c"
-        onchange={handleInputChange}
-        disabled={isViewMode}
-      ></lightning-combobox>
-      <template if:true={showDischargeType}>
-        <lightning-combobox
-          label="Discharge Type"
-          value={claimant.Discharge_Type__c}
-          options={dischargeOptions}
-          data-field="Discharge_Type__c"
-          onchange={handleInputChange}
-          disabled={isViewMode}
-        ></lightning-combobox>
-      </template>
-      <template if:false={isViewMode}>
-        <lightning-button
-          label="Save"
-          onclick={handleSave}
-          class="slds-m-top_small"
-        ></lightning-button>
-        <lightning-button
-          label="Cancel"
-          onclick={handleCancel}
-          class="slds-m-top_small"
-        ></lightning-button>
-      </template>
-      <template if:true={isViewMode}>
-        <lightning-button
-          label="Edit"
-          onclick={handleEdit}
-          class="slds-m-top_small"
-        ></lightning-button>
-      </template>
+      <div class="slds-grid slds-wrap slds-p-around_medium">
+        <!-- Left Column -->
+        <div class="slds-col slds-size_1-of-2 slds-p-horizontal_small">
+          <lightning-input
+            type="text"
+            label="First Name"
+            value={claimant.First_Name__c}
+            onchange={handleInputChange}
+            data-field="First_Name__c"
+            disabled={isViewMode}
+          ></lightning-input>
+
+          <lightning-input
+            label="Email"
+            value={claimant.Email_Address__c}
+            onchange={handleInputChange}
+            data-field="Email_Address__c"
+            disabled={isViewMode}
+          ></lightning-input>
+
+          <lightning-input
+            label="Date Of Birth"
+            value={claimant.DateOfBirth__c}
+            data-field="DateOfBirth__c"
+            disabled="true"
+          ></lightning-input>
+
+          <lightning-combobox
+            label="Military Branch"
+            value={claimant.Military_Branch__c}
+            options={branches}
+            data-field="Military_Branch__c"
+            onchange={handleInputChange}
+            disabled={isViewMode}
+          ></lightning-combobox>
+        </div>
+
+        <!-- Right Column -->
+        <div class="slds-col slds-size_1-of-2 slds-p-horizontal_small">
+          <lightning-input
+            label="Last Name"
+            value={claimant.Last_Name__c}
+            onchange={handleInputChange}
+            data-field="Last_Name__c"
+            disabled={isViewMode}
+          ></lightning-input>
+
+          <lightning-input
+            label="Phone"
+            value={claimant.Phone__c}
+            onchange={handleInputChange}
+            data-field="Phone__c"
+            disabled={isViewMode}
+          ></lightning-input>
+
+          <lightning-combobox
+            label="Veteran Status"
+            value={claimant.Veteran_Status__c}
+            options={status}
+            data-field="Veteran_Status__c"
+            onchange={handleInputChange}
+            disabled={isViewMode}
+          ></lightning-combobox>
+
+          <template if:true={showDischargeType}>
+            <lightning-combobox
+              label="Discharge Type"
+              value={claimant.Discharge_Type__c}
+              options={dischargeOptions}
+              data-field="Discharge_Type__c"
+              onchange={handleInputChange}
+              disabled={isViewMode}
+            ></lightning-combobox>
+          </template>
+        </div>
+      </div>
+
+      <!-- Buttons Section -->
+      <div class="slds-m-top_medium slds-text-align_center">
+        <template if:false={isViewMode}>
+          <lightning-button
+            label="Save"
+            onclick={handleSave}
+            class="slds-m-right_small"
+          ></lightning-button>
+          <lightning-button
+            label="Cancel"
+            onclick={handleCancel}
+          ></lightning-button>
+        </template>
+        <template if:true={isViewMode}>
+          <lightning-button
+            label="Edit"
+            onclick={handleEdit}
+          ></lightning-button>
+        </template>
+      </div>
+
+      <!-- Success/Error Messages -->
       <template if:true={successMessage}>
-        <p class="slds-text-color_success">{successMessage}</p>
+        <p class="slds-text-color_success slds-text-align_center">
+          {successMessage}
+        </p>
       </template>
       <template if:true={errorOnSave}>
-        <p class="slds-text-color_error">{errorOnSave}</p>
+        <p class="slds-text-color_error slds-text-align_center">
+          {errorOnSave}
+        </p>
       </template>
     </template>
+
     <template if:true={error}>
       <p>{error}</p>
     </template>
