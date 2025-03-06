@@ -76,7 +76,7 @@ export default class HomeDashboard extends NavigationMixin(LightningElement) {
     { label: "Decision Made", value: "Decision Made", class: "step" }
   ];
 
-  @wire(getAttachments, { recordId: "$claim.Id" })
+  @wire(getAttachments, { recordId: "$recentClaim.Id" })
   wiredFiles({ data }) {
     if (data) {
       this.files = data.map((file) => ({
