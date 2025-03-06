@@ -42,6 +42,23 @@ p {
   padding: 15px;
 }
 
+.welcome-container {
+  background-color: #1a3b5d;
+  /* color: white; */
+  padding: 20px;
+  border-radius: 0px;
+  text-align: center;
+}
+
+.welcome-container h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.welcome-container p {
+  font-size: 1rem;
+}
+
 /* Styling for the Claim Statistics Section */
 .claim-statistics {
   margin-bottom: 20px;
