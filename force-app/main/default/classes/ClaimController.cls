@@ -29,11 +29,11 @@ public with sharing class ClaimController {
 
         
         Map<String, Id> recordTypeMap = new Map<String, Id>{
-            'Disability Compensation' => '0128N000004lU4QQAU',
-            'Education & Training' => '0128N000004lU4kQAE',
-            'Healthcare Benefits' => '0128N000004lU4fQAE',
-            'Housing Assistance' => '0128N000004lU4VQAU',
-            'Pension' => '0128N000004lU4aQAE'
+            'Disability Compensation' => '0124U000000uzGLQAY',
+            'Education & Training' => '0124U000000uzGMQAY',
+            'Healthcare Benefits' => '0124U000000uzGNQAY',
+            'Housing Assistance' => '0124U000000uzGOQAY',
+            'Pension' => '0124U000000uzGPQAY'
         };
 
         
