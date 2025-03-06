@@ -1,9 +1,11 @@
 import { LightningElement, wire, track } from "lwc";
+import { NavigationMixin } from "lightning/navigation";
 import getMostRecentClaim from "@salesforce/apex/ViewClaimController.getMostRecentClaim";
 import getClaimStatistics from "@salesforce/apex/ViewClaimController.getClaimStatistics";
 import getAttachments from "@salesforce/apex/TrackClaimController.getAttachments";
+import userId from "@salesforce/user/Id";
 
-export default class HomeDashboard extends LightningElement {
+export default class HomeDashboard extends NavigationMixin(LightningElement) {
   @track recentClaim;
   @track totalClaims = 0;
   @track approvedClaims = 0;
@@ -13,6 +15,7 @@ export default class HomeDashboard extends LightningElement {
   showFields = {};
   currentStep = "Received";
   files = [];
+  isLoggedIn = userId !== null && userId !== undefined;
 
   @wire(getMostRecentClaim)
   wiredRecentClaim({ error, data }) {
@@ -42,6 +45,15 @@ export default class HomeDashboard extends LightningElement {
     } else if (error) {
       console.error("Error fetching claim statistics", error);
     }
+  }
+
+  handleGetStarted() {
+    this[NavigationMixin.Navigate]({
+      type: "standard__webPage",
+      attributes: {
+        url: "/s/login/SelfRegister"
+      }
+    });
   }
 
   // Class for dynamic status coloring

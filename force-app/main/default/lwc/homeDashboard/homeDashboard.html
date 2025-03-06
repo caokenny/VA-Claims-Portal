@@ -1,102 +1,119 @@
 <template>
-  <!-- Claim Statistics -->
-  <div class="claim-statistics">
-    <lightning-card icon-name="custom:70">
-      <div class="stats-container">
-        <div class="stat-box">
-          <strong>Total Claims:</strong> <span> {totalClaims}</span>
+  <template if:true={isLoggedIn}>
+    <!-- Claim Statistics -->
+    <div class="claim-statistics">
+      <lightning-card icon-name="custom:70">
+        <div class="stats-container">
+          <div class="stat-box">
+            <strong>Total Claims:</strong> <span> {totalClaims}</span>
+          </div>
+          <div class="stat-box slds-text-color_success">
+            <strong>Approved:</strong> <span> {approvedClaims}</span>
+          </div>
+          <div class="stat-box slds-text-color_warning">
+            <strong>Pending:</strong> <span> {pendingClaims}</span>
+          </div>
+          <div class="stat-box slds-text-color_error">
+            <strong>Denied:</strong> <span> {deniedClaims}</span>
+          </div>
         </div>
-        <div class="stat-box slds-text-color_success">
-          <strong>Approved:</strong> <span> {approvedClaims}</span>
+      </lightning-card>
+    </div>
+
+    <!-- Most Recent Claim Card -->
+    <template if:true={recentClaim}>
+      <lightning-card
+        title="Most Recent Claim"
+        icon-name="standard:record"
+        class="slds-m-bottom_medium recent-claim-card"
+      >
+        <div class="progress-container">
+          <lightning-progress-indicator current-step={currentStep} type="path">
+            <template for:each={steps} for:item="step">
+              <lightning-progress-step
+                key={step.value}
+                label={step.label}
+                value={step.value}
+                class={step.class}
+              ></lightning-progress-step>
+            </template>
+          </lightning-progress-indicator>
         </div>
-        <div class="stat-box slds-text-color_warning">
-          <strong>Pending:</strong> <span> {pendingClaims}</span>
-        </div>
-        <div class="stat-box slds-text-color_error">
-          <strong>Denied:</strong> <span> {deniedClaims}</span>
-        </div>
-      </div>
-    </lightning-card>
-  </div>
-
-  <!-- Most Recent Claim Card -->
-  <template if:true={recentClaim}>
-    <lightning-card
-      title="Most Recent Claim"
-      icon-name="standard:record"
-      class="slds-m-bottom_medium recent-claim-card"
-    >
-      <div class="progress-container">
-        <lightning-progress-indicator current-step={currentStep} type="path">
-          <template for:each={steps} for:item="step">
-            <lightning-progress-step
-              key={step.value}
-              label={step.label}
-              value={step.value}
-              class={step.class}
-            ></lightning-progress-step>
-          </template>
-        </lightning-progress-indicator>
-      </div>
-
-      <div class="claim-details">
-        <lightning-layout multiple-rows>
-          <lightning-layout-item size="12" padding="around-small">
-            <p><b>Claim ID:</b> {recentClaim.Name}</p>
-          </lightning-layout-item>
-
-          <template if:true={showFields.annualIncome}>
-            <lightning-layout-item size="12" padding="around-small">
-              <p><b>Annual Income:</b> {recentClaim.Income__c}</p>
-            </lightning-layout-item>
-          </template>
-
-          <template if:true={showFields.housingStatus}>
-            <lightning-layout-item size="12" padding="around-small">
-              <p><b>Housing Status:</b> {recentClaim.Housing_Status__c}</p>
-            </lightning-layout-item>
-          </template>
-
-          <lightning-layout-item size="12" padding="around-small">
-            <p><b>Claim Status:</b> {recentClaim.Status__c}</p>
-          </lightning-layout-item>
-
-          <lightning-layout-item size="12" padding="around-small">
-            <p><b>Final Decision:</b> {recentClaim.Final_Decision__c}</p>
-          </lightning-layout-item>
-        </lightning-layout>
-      </div>
-      <template if:true={files}>
-        <lightning-card
-          title="Attached Files"
-          icon-name="utility:paperclip"
-          class="attachment-card"
-        >
+        <div class="claim-details">
           <lightning-layout multiple-rows>
-            <template for:each={files} for:item="file">
-              <lightning-layout-item
-                key={file.fileUrl}
-                size="12"
-                padding="around-small"
-              >
-                <lightning-tile
-                  label={file.title}
-                  href={file.fileUrl}
-                  target="_blank"
-                  type="media"
-                >
-                  <lightning-icon
-                    slot="media"
-                    icon-name="doctype:attachment"
-                    alternative-text="File"
-                    size="small"
-                  ></lightning-icon>
-                </lightning-tile>
+            <lightning-layout-item size="12" padding="around-small">
+              <p><b>Claim ID:</b> {recentClaim.Name}</p>
+            </lightning-layout-item>
+            <template if:true={showFields.annualIncome}>
+              <lightning-layout-item size="12" padding="around-small">
+                <p><b>Annual Income:</b> {recentClaim.Income__c}</p>
               </lightning-layout-item>
             </template>
+            <template if:true={showFields.housingStatus}>
+              <lightning-layout-item size="12" padding="around-small">
+                <p><b>Housing Status:</b> {recentClaim.Housing_Status__c}</p>
+              </lightning-layout-item>
+            </template>
+            <lightning-layout-item size="12" padding="around-small">
+              <p><b>Claim Status:</b> {recentClaim.Status__c}</p>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" padding="around-small">
+              <p><b>Final Decision:</b> {recentClaim.Final_Decision__c}</p>
+            </lightning-layout-item>
           </lightning-layout>
-        </lightning-card>
-      </template>
-    </lightning-card>
+        </div>
+        <template if:true={files}>
+          <lightning-card
+            title="Attached Files"
+            icon-name="utility:paperclip"
+            class="attachment-card"
+          >
+            <lightning-layout multiple-rows>
+              <template for:each={files} for:item="file">
+                <lightning-layout-item
+                  key={file.fileUrl}
+                  size="12"
+                  padding="around-small"
+                >
+                  <lightning-tile
+                    label={file.title}
+                    href={file.fileUrl}
+                    target="_blank"
+                    type="media"
+                  >
+                    <lightning-icon
+                      slot="media"
+                      icon-name="doctype:attachment"
+                      alternative-text="File"
+                      size="small"
+                    ></lightning-icon>
+                  </lightning-tile>
+                </lightning-layout-item>
+              </template>
+            </lightning-layout>
+          </lightning-card>
+        </template>
+      </lightning-card>
+    </template>
+  </template>
+  <template if:false={isLoggedIn}>
+    <div class="welcome-container slds-p-around_large slds-text-align_center">
+      <lightning-card>
+        <div class="slds-p-around_medium">
+          <h1 class="slds-text-heading_large slds-text-color_default">
+            Welcome to the VA Claims Portal
+          </h1>
+          <p class="slds-text-body_regular slds-m-vertical_medium">
+            Whether you're a Veteran, service member, or family member, we're
+            here to help you get the care and benefits you deserve.
+          </p>
+          <lightning-button
+            label="Get Started"
+            variant="brand"
+            onclick={handleGetStarted}
+          ></lightning-button>
+        </div>
+      </lightning-card>
+    </div>
   </template>
 </template>
