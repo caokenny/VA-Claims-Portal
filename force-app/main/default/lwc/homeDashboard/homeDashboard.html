@@ -1,76 +1,102 @@
 <template>
-    <!-- Quick Actions Panel
-    <div class="quick-actions">
-        <lightning-button variant="brand" label="File a Claim" title="File a Claim" onclick={handleFileClaim}></lightning-button>
-        <lightning-button variant="neutral" label="Appeal a Claim" title="Appeal a Claim" onclick={handleAppealClaim}></lightning-button>
-        <lightning-button variant="outline-brand" label="View Claims" title="View Claims" onclick={handleTrackClaims}></lightning-button>
-    </div> -->
+  <!-- Claim Statistics -->
+  <div class="claim-statistics">
+    <lightning-card icon-name="custom:70">
+      <div class="stats-container">
+        <div class="stat-box">
+          <strong>Total Claims:</strong> <span> {totalClaims}</span>
+        </div>
+        <div class="stat-box slds-text-color_success">
+          <strong>Approved:</strong> <span> {approvedClaims}</span>
+        </div>
+        <div class="stat-box slds-text-color_warning">
+          <strong>Pending:</strong> <span> {pendingClaims}</span>
+        </div>
+        <div class="stat-box slds-text-color_error">
+          <strong>Denied:</strong> <span> {deniedClaims}</span>
+        </div>
+      </div>
+    </lightning-card>
+  </div>
 
-    <!-- Claim Statistics -->
-    <div class="claim-statistics">
-        <lightning-card title="Claim Statistics" icon-name="custom:70">
-            <div class="stats-container">
-                <p><strong>Total Claims:</strong> {totalClaims}</p>
-                <p><strong>Approved:</strong> <span class="slds-text-color_success">{approvedClaims}</span></p>
-                <p><strong>Pending:</strong> <span class="slds-text-color_warning">{pendingClaims}</span></p>
-                <p><strong>Denied:</strong> <span class="slds-text-color_error">{deniedClaims}</span></p>
-            </div>
-        </lightning-card>
-    </div>
+  <!-- Most Recent Claim Card -->
+  <template if:true={recentClaim}>
+    <lightning-card
+      title="Most Recent Claim"
+      icon-name="standard:record"
+      class="slds-m-bottom_medium recent-claim-card"
+    >
+      <div class="progress-container">
+        <lightning-progress-indicator current-step={currentStep} type="path">
+          <template for:each={steps} for:item="step">
+            <lightning-progress-step
+              key={step.value}
+              label={step.label}
+              value={step.value}
+              class={step.class}
+            ></lightning-progress-step>
+          </template>
+        </lightning-progress-indicator>
+      </div>
 
-    <!-- Most Recent Claim Card -->
-    <template if:true={recentClaim}>
-        <lightning-card 
-            title="Most Recent Claim" 
-            icon-name="standard:record"
-            class="slds-m-bottom_medium recent-claim-card"
+      <div class="claim-details">
+        <lightning-layout multiple-rows>
+          <lightning-layout-item size="12" padding="around-small">
+            <p><b>Claim ID:</b> {recentClaim.Name}</p>
+          </lightning-layout-item>
+
+          <template if:true={showFields.annualIncome}>
+            <lightning-layout-item size="12" padding="around-small">
+              <p><b>Annual Income:</b> {recentClaim.Income__c}</p>
+            </lightning-layout-item>
+          </template>
+
+          <template if:true={showFields.housingStatus}>
+            <lightning-layout-item size="12" padding="around-small">
+              <p><b>Housing Status:</b> {recentClaim.Housing_Status__c}</p>
+            </lightning-layout-item>
+          </template>
+
+          <lightning-layout-item size="12" padding="around-small">
+            <p><b>Claim Status:</b> {recentClaim.Status__c}</p>
+          </lightning-layout-item>
+
+          <lightning-layout-item size="12" padding="around-small">
+            <p><b>Final Decision:</b> {recentClaim.Final_Decision__c}</p>
+          </lightning-layout-item>
+        </lightning-layout>
+      </div>
+      <template if:true={files}>
+        <lightning-card
+          title="Attached Files"
+          icon-name="utility:paperclip"
+          class="attachment-card"
         >
-            <div class="claim-details">
-                <!-- Claim ID Box -->
-                <div class="info-box">
-                    <strong>Claim ID:</strong>
-                    <span>{recentClaim.Name}</span>
-                </div>
-
-                <!-- Claimant Box -->
-                <div class="info-box">
-                    <strong>Claimant:</strong>
-                    <span>{recentClaim.ClaimantName}</span>
-                </div>
-
-                <!-- Type Box -->
-                <div class="info-box">
-                    <strong>Type:</strong>
-                    <span>{recentClaim.Type__c}</span>
-                </div>
-
-                <!-- Status Box with Dynamic Styling -->
-                <div class="info-box">
-                    <strong>Status:</strong>
-                    <span class={statusClass}>{recentClaim.Status__c}</span>
-                </div>
-
-                <!-- Date of Injury Box -->
-                <div class="info-box">
-                    <strong>Date of Injury:</strong>
-                    <span>{recentClaim.Date_Of_Injury__c}</span>
-                </div>
-            </div>
+          <lightning-layout multiple-rows>
+            <template for:each={files} for:item="file">
+              <lightning-layout-item
+                key={file.fileUrl}
+                size="12"
+                padding="around-small"
+              >
+                <lightning-tile
+                  label={file.title}
+                  href={file.fileUrl}
+                  target="_blank"
+                  type="media"
+                >
+                  <lightning-icon
+                    slot="media"
+                    icon-name="doctype:attachment"
+                    alternative-text="File"
+                    size="small"
+                  ></lightning-icon>
+                </lightning-tile>
+              </lightning-layout-item>
+            </template>
+          </lightning-layout>
         </lightning-card>
-    </template>
-
-    <!-- FAQ Section
-    <lightning-card title="Frequently Asked Questions" icon-name="custom:101">
-        <lightning-accordion allow-multiple-sections-open>
-            <lightning-accordion-section name="q1" label="How do I file a claim?">
-                <p>Go to the 'File a Claim' section and fill out the required details.</p>
-            </lightning-accordion-section>
-            <lightning-accordion-section name="q2" label="How can I track my claim?">
-                <p>You can track your claim under the 'Track Claims' section in the dashboard.</p>
-            </lightning-accordion-section>
-            <lightning-accordion-section name="q3" label="Who can I contact for support?">
-                <p>Contact our support team via email at support@example.com or call 123-456-7890.</p>
-            </lightning-accordion-section>
-        </lightning-accordion>
-    </lightning-card> -->
+      </template>
+    </lightning-card>
+  </template>
 </template>

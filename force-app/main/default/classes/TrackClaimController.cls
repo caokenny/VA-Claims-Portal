@@ -21,7 +21,7 @@ public without sharing class TrackClaimController {
         Status__c,
         Final_Decision__c
       FROM Claim__c
-      WHERE Name = :claimId
+      WHERE Id = :claimId
       LIMIT 1
     ];
 
