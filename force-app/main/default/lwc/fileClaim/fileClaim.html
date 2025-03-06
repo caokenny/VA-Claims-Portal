@@ -21,16 +21,29 @@
                 <lightning-input type="date" label="Date of Injury" name="Date_Of_Injury__c" onchange={handleInputChange}></lightning-input>
             </template>
 
+            <template if:true={showFields.serviceConnected}>
+                <lightning-input type="checkbox" label="Service Connected" name="Service_Connected__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
             <template if:true={showFields.annualIncome}>
                 <lightning-input type="number" label="Annual Income" name="Annual_Income__c" onchange={handleInputChange}></lightning-input>
             </template>
 
             <template if:true={showFields.currentlyHomeless}>
-                <lightning-input type="checkbox" label="Currently Homeless?" name="Currently_Homeless__c" onchange={handleInputChange}></lightning-input>
+                <lightning-input type="checkbox" label="Currently Homeless?" name="Currently_Homeless__c" onchange={handleCurrentlyHomelessChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.atRiskofBeingHomeless}>
+                <lightning-input type="checkbox" label="At Risk of Being Homeless" name="At_risk_of_being_homeless__c" onchange={handleInputChange}></lightning-input>
             </template>
 
             <template if:true={showFields.housingStatus}>
-                <lightning-input label="Housing Status" name="Housing_Status__c" onchange={handleInputChange}></lightning-input>
+                <lightning-combobox
+                    label="Housing Status"
+                    name="Housing_Status__c"
+                    options={housingStatusOptions}
+                    onchange={handleInputChange}>
+                </lightning-combobox>
             </template>
 
             <template if:true={showFields.educationType}>
@@ -39,6 +52,52 @@
 
             <template if:true={showFields.institutionName}>
                 <lightning-input label="Institution Name" name="Institution_Name__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.degreeorCertificationProgram}>
+                <lightning-input label="Degree or Certification Program" name="Degree_or_Certification_Program__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.startDate}>
+                <lightning-input type="date" label="Start Date" name="Start_Date__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.expectedCompletionDate}>
+                <lightning-input type="date" label="Expected Completion Date" name="Expected_Completion_Date__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.preferredVAFacility}>
+                <lightning-input label="Preferred VA Facility" name="Preferred_VA_Facility__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.pensionEligibility}>
+                <lightning-combobox
+                    label="Pension Eligibility"
+                    name="Pension_Eligibility__c"
+                    options={pensionEligibilityOptions}
+                    onchange={handleInputChange}>
+                </lightning-combobox>
+            </template>
+
+            <template if:true={showFields.currentInsuranceProvider}>
+                <lightning-input label="Current Insurance Provider" name="Current_Insurance_Provider__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.currentMedicationsorAllergies}>
+                <lightning-input label="Current Medications or Allergies" name="Current_Medications_or_Allergies__c" onchange={handleInputChange}></lightning-input>
+            </template>
+
+            <template if:true={showFields.preferredCommunicationMethod}>
+                <lightning-combobox
+                    label="Preferred Communication Method"
+                    name="Preferred_Communication_Method__c"
+                    options={preferredCommunicationOptions}
+                    onchange={handleInputChange}>
+                </lightning-combobox>
+            </template>
+
+            <template if:true={showFields.comments}>
+                <lightning-input label="Additonal Comments" name="Comments__c" onchange={handleInputChange}></lightning-input>
             </template>
 
             <!-- File Upload -->

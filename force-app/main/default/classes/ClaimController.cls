@@ -6,7 +6,7 @@ public with sharing class ClaimController {
 
     @AuraEnabled
     public static Id getOrCreateClaimantForUser(Id userId) {
-        // Try to fetch existing Claimant record
+        
         Claimant__c claimant;
         try {
             claimant = [SELECT Id FROM Claimant__c WHERE User__c = :userId LIMIT 1];
@@ -14,7 +14,6 @@ public with sharing class ClaimController {
             System.debug('Error fetching Claimant: ' + e.getMessage());
         }
     
-        // If no Claimant found, create a new one
         if (claimant == null) {
             claimant = new Claimant__c(User__c = userId);
             insert claimant;
@@ -25,24 +24,42 @@ public with sharing class ClaimController {
 
     @AuraEnabled
     public static Id createClaim(Claim__c newClaim) {
-        System.debug('Creating claim with type: ' + newClaim.Type__c);
-        System.debug('Claimant ID: ' + newClaim.Claimant__c);
-        System.debug('Status: ' + newClaim.Status__c);
-    
-        if (newClaim.Type__c == null) {
-            throw new AuraHandledException('Claim Type is required.');
+        
+        String claimType = newClaim.Type__c;
+
+        
+        Map<String, Id> recordTypeMap = new Map<String, Id>{
+            'Disability Compensation' => '0128N000004lU4QQAU',
+            'Education & Training' => '0128N000004lU4kQAE',
+            'Healthcare Benefits' => '0128N000004lU4fQAE',
+            'Housing Assistance' => '0128N000004lU4VQAU',
+            'Pension' => '0128N000004lU4aQAE'
+        };
+
+        
+        Id recordTypeId = recordTypeMap.get(claimType);
+
+        if (recordTypeId == null) {
+            System.debug('Invalid Claim Type: ' + claimType);
+           
+            return null;
         }
-    
+
+        
+        newClaim.RecordTypeId = recordTypeId;
+
+       
         insert newClaim;
+
         return newClaim.Id;
-    }   
-    
+    }
+
     @AuraEnabled
     public static void createContentDocumentLink(Id contentDocumentId, Id relatedRecordId) {
         ContentDocumentLink link = new ContentDocumentLink();
         link.ContentDocumentId = contentDocumentId;
         link.LinkedEntityId = relatedRecordId;
-        link.ShareType = 'V'; // View access
+        link.ShareType = 'V';
         link.Visibility = 'AllUsers';
         insert link;
     }
@@ -54,6 +71,17 @@ public with sharing class ClaimController {
                 WHERE Claimant__c IN (SELECT Id FROM Claimant__c WHERE User__c = :userId)
                 ORDER BY CreatedDate DESC 
                 LIMIT 5];
+    }
+
+    @AuraEnabled
+    public static Id getRecordTypeId(String recordTypeName) {
+        try {
+            RecordType rt = [SELECT Id FROM RecordType WHERE DeveloperName = :recordTypeName AND SObjectType = 'Claim' LIMIT 1];
+            return rt.Id;
+        } catch (Exception e) {
+            System.debug('Error fetching RecordType: ' + e.getMessage());
+            return null;
+        }
     }
     
 }
