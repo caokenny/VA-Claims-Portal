@@ -1,15 +1,27 @@
 public without sharing class ViewClaimController {
-    public Claim__c claim { get; set; }  // Add this property
+
+    public Claim__c claim { get; private set; }
 
     public ViewClaimController() {
-        String claimId = ApexPages.currentPage().getParameters().get('claimId');
-        if (claimId != null) {
-            claim = [SELECT Id, Name, Claimant__c, Claimant__r.First_Name__c, Claimant__r.Last_Name__c, 
-                            Type__c, Status__c, Date_Of_Injury__c, Education_Type__c, 
-                            Disability__c, Housing_Status__c
-                     FROM Claim__c
-                     WHERE Id = :claimId
-                     LIMIT 1];
+        // Get the ID from the URL
+        String claimId = ApexPages.currentPage().getParameters().get('id');
+        System.debug('Claim ID Passed: ' + claimId);
+
+        if (!String.isEmpty(claimId)) {
+            try {
+                claim = [SELECT Id, Name, Claimant__c, Claimant__r.First_Name__c, Claimant__r.Last_Name__c, 
+                                Type__c, Status__c, Date_Of_Injury__c, Education_Type__c, 
+                                Disability__c, Housing_Status__c, Final_Decision__c
+                         FROM Claim__c
+                         WHERE Id = :claimId
+                         LIMIT 1];
+
+                System.debug('Claim Retrieved: ' + claim);
+            } catch (Exception e) {
+                System.debug('Error retrieving claim: ' + e.getMessage());
+            }
+        } else {
+            System.debug('No claimId found in URL.');
         }
     }
 
