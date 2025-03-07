@@ -5,6 +5,7 @@ public without sharing class RegistrationController {
     String lastName,
     String email,
     String password,
+    String ssn,
     String phone,
     Date dateOfBirth,
     String militaryBranch,
@@ -38,6 +39,7 @@ public without sharing class RegistrationController {
         First_Name__c = firstName,
         Last_Name__c = lastName,
         Email_Address__c = email,
+        SSN__c = ssn,
         DateOfBirth__c = dateOfBirth,
         Phone__c = phone,
         Military_Branch__c = militaryBranch,
@@ -51,18 +53,8 @@ public without sharing class RegistrationController {
 
       // Set the password for the user
       System.setPassword(newUser.Id, password);
-      // System.resetPassword(newUser.Id, true);
 
       update newUser;
-      // System.debug('Password successfully set for new user.');
-
-      // UserLogin login = [SELECT Id, IsPasswordLocked FROM UserLogin WHERE UserId = :newUser.Id LIMIT 1];
-      // UserLogin userLogin = new UserLogin
-
-      // if (login.IsPasswordLocked) {
-      //   login.IsPasswordLocked = false;
-      //   update login;
-      // }
 
       PageReference login = Site.login(newUser.Username, password, '/s');
       System.debug('User logged in successfully.');

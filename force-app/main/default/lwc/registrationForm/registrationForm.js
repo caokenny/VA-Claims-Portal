@@ -15,16 +15,32 @@ export default class RegistrationForm extends NavigationMixin(
   dischargeType = "";
   errorMessage = "";
   password = "";
+  ssn = "";
   showDischargeType = false;
 
   handleInputChange(event) {
     const field = event.target.dataset.id;
     this[field] = event.target.value;
-    // console.log(`Field: ${field}, Value: ${this[field]}`);
 
     if (field === "veteranStatus") {
       this.showDischargeType = this.veteranStatus === "Discharged";
     }
+  }
+
+  handleSSNChange(event) {
+    let ssn = event.target.value;
+
+    ssn = ssn.replace(/[^0-9]/g, "");
+
+    if (ssn.length >= 3) {
+      ssn = ssn.substring(0, 3) + "-" + ssn.substring(3);
+    }
+
+    if (ssn.length >= 6) {
+      ssn = ssn.substring(0, 6) + "-" + ssn.substring(6);
+    }
+
+    this.ssn = ssn;
   }
 
   get branches() {
@@ -66,6 +82,7 @@ export default class RegistrationForm extends NavigationMixin(
         lastName: this.lastName,
         email: this.email,
         password: this.password,
+        ssn: this.ssn,
         dateOfBirth: this.dateOfBirth,
         phone: this.phone,
         militaryBranch: this.militaryBranch,

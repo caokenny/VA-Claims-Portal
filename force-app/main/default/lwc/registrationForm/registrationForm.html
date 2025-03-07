@@ -1,111 +1,128 @@
 <template>
-  <div class="slds-form-element">
-    <div class="input-container">
-      <lightning-input
-        type="text"
-        placeholder="First Name"
-        value={firstName}
-        onchange={handleInputChange}
-        data-id="firstName"
-        variant="label-hidden"
-        required
-      ></lightning-input>
-    </div>
-    <div class="input-container">
-      <lightning-input
-        type="text"
-        placeholder="Last Name"
-        value={lastName}
-        onchange={handleInputChange}
-        data-id="lastName"
-        variant="label-hidden"
-        required
-      ></lightning-input>
-    </div>
-    <div class="input-container">
-      <lightning-input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onchange={handleInputChange}
-        data-id="email"
-        variant="label-hidden"
-        required
-      ></lightning-input>
-    </div>
-    <div class="input-container">
-      <lightning-input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onchange={handleInputChange}
-        data-id="password"
-        variant="label-hidden"
-        required
-      ></lightning-input>
-    </div>
-    <div class="input-container">
-      <lightning-input
-        type="text"
-        placeholder="Phone"
-        value={phone}
-        onchange={handleInputChange}
-        data-id="phone"
-        variant="label-hidden"
-      ></lightning-input>
-    </div>
-    <div class="input-container">
-      <lightning-input
-        type="date"
-        date-style="short"
-        placeholder="Date of Birth"
-        value={dateOfBirth}
-        onchange={handleInputChange}
-        data-id="dateOfBirth"
-        variant="label-hidden"
-        required
-      ></lightning-input>
-    </div>
-    <div class="input-container">
-      <lightning-combobox
-        placeholder="Military Branch"
-        value={militaryBranch}
-        options={branches}
-        data-id="militaryBranch"
-        onchange={handleInputChange}
-        variant="label-hidden"
-        required
-      ></lightning-combobox>
-    </div>
-    <div class="input-container">
-      <lightning-combobox
-        placeholder="Veteran Status"
-        value={veteranStatus}
-        options={status}
-        data-id="veteranStatus"
-        onchange={handleInputChange}
-        variant="label-hidden"
-        required
-      ></lightning-combobox>
-    </div>
-    <template if:true={showDischargeType}>
-      <div class="input-container">
+  <div class="form-box">
+    <div class="slds-grid slds-wrap form-container">
+      <div class="slds-size_1-of-2 input-container">
+        <lightning-input
+          type="text"
+          placeholder="First Name"
+          value={firstName}
+          onchange={handleInputChange}
+          data-id="firstName"
+          variant="label-hidden"
+          required
+        ></lightning-input>
+      </div>
+      <div class="slds-size_1-of-2 input-container">
+        <lightning-input
+          type="text"
+          placeholder="Last Name"
+          value={lastName}
+          onchange={handleInputChange}
+          data-id="lastName"
+          variant="label-hidden"
+          required
+        ></lightning-input>
+      </div>
+      <div class="slds-size_1-of-2 input-container">
+        <lightning-input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onchange={handleInputChange}
+          data-id="email"
+          variant="label-hidden"
+          required
+        ></lightning-input>
+      </div>
+      <div class="slds-size_1-of-2 input-container">
+        <lightning-input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onchange={handleInputChange}
+          data-id="password"
+          variant="label-hidden"
+          required
+        ></lightning-input>
+      </div>
+      <div class="slds-size_1-of-2 input-container">
+        <lightning-input
+          type="text"
+          placeholder="Phone"
+          value={phone}
+          onchange={handleInputChange}
+          data-id="phone"
+          variant="label-hidden"
+        ></lightning-input>
+      </div>
+      <div class="slds-size_1-of-2 input-container">
+        <lightning-input
+          type="text"
+          placeholder="SSN"
+          value={ssn}
+          onchange={handleSSNChange}
+          data-id="ssn"
+          variant="label-hidden"
+          max-length="11"
+          required
+        ></lightning-input>
+      </div>
+      <div class="slds-size_1-of-2 input-container">
+        <lightning-input
+          type="date"
+          date-style="short"
+          placeholder="Date of Birth"
+          value={dateOfBirth}
+          onchange={handleInputChange}
+          data-id="dateOfBirth"
+          variant="label-hidden"
+          required
+        ></lightning-input>
+      </div>
+      <div class="slds-size_1-of-2 input-container">
         <lightning-combobox
-          placeholder="Discharge Type"
-          value={dischargeType}
-          options={dischargeOptions}
-          data-id="dischargeType"
+          placeholder="Military Branch"
+          value={militaryBranch}
+          options={branches}
+          data-id="militaryBranch"
           onchange={handleInputChange}
           variant="label-hidden"
+          required
         ></lightning-combobox>
       </div>
-    </template>
-    <lightning-button
-      label="Register"
-      onclick={handleRegister}
-    ></lightning-button>
-    <template if:true={errorMessage}>
-      <p class="error-message">{errorMessage}</p>
-    </template>
+      <div class="slds-size_1-of-2 input-container">
+        <lightning-combobox
+          placeholder="Veteran Status"
+          value={veteranStatus}
+          options={status}
+          data-id="veteranStatus"
+          onchange={handleInputChange}
+          variant="label-hidden"
+          required
+        ></lightning-combobox>
+      </div>
+      <template if:true={showDischargeType}>
+        <div class="slds-size_1-of-2 input-container">
+          <lightning-combobox
+            placeholder="Discharge Type"
+            value={dischargeType}
+            options={dischargeOptions}
+            data-id="dischargeType"
+            onchange={handleInputChange}
+            variant="label-hidden"
+          ></lightning-combobox>
+        </div>
+      </template>
+      <div class="slds-size_1-of-1">
+        <lightning-button
+          label="Register"
+          onclick={handleRegister}
+          class="register-button"
+        ></lightning-button>
+      </div>
+      <template if:true={errorMessage}>
+        <p class="error-message">{errorMessage}</p>
+      </template>
+    </div>
   </div>
 </template>
