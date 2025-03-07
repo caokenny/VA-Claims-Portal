@@ -1,11 +1,77 @@
 <apex:page renderAs="pdf" controller="ViewClaimController">
+    <style>
+        h1 {
+            text-align: center;
+            color: #2C3E50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #2C3E50;
+            color: white;
+            text-align: left;
+        }
+    </style>
+    
     <h1>Claim Details</h1>
-    <p><strong>Claim ID:</strong> {!claim.ID}</p>
-    <p><strong>Claimant Name:</strong> {!claim.Name}</p>
-    <p><strong>Status:</strong> {!claim.Status__c}</p>
-    <p><strong>Type:</strong> {!claim.Type__c}</p>
-    <p><strong>Date of Injury:</strong> {!claim.Date_Of_Injury__c}</p>
-    <p><strong>Education Type:</strong> {!claim.Education_Type__c}</p>
-    <p><strong>Disability:</strong> {!claim.Disability__c}</p>
-    <p><strong>Final Decision:</strong> {!claim.Final_Decision__c}</p>
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td><strong>Claim ID</strong></td>
+            <td>{!claim.Id}</td>
+        </tr>
+        <tr>
+            <td><strong>Claimant Name</strong></td>
+            <td>{!claim.Claimant__r.First_Name__c} {!claim.Claimant__r.Last_Name__c}</td>
+        </tr>
+        <tr>
+            <td><strong>Status</strong></td>
+            <td>{!claim.Status__c}</td>
+        </tr>
+        <tr>
+            <td><strong>Type</strong></td>
+            <td>{!claim.Type__c}</td>
+        </tr>
+        <tr>
+            <td><strong>Date of Injury</strong></td>
+            <td>{!claim.Date_Of_Injury__c}</td>
+        </tr>
+        <tr>
+            <td><strong>Education Type</strong></td>
+            <td>{!claim.Education_Type__c}</td>
+        </tr>
+        <tr>
+            <td><strong>Disability</strong></td>
+            <td>{!claim.Disability__c}</td>
+        </tr>
+        <tr>
+            <td><strong>Housing Status</strong></td>
+            <td>{!claim.Housing_Status__c}</td>
+        </tr>
+        <tr>
+            <td><strong>Preferred Communication Method</strong></td>
+            <td>{!claim.Preferred_Communication_Method__c}</td>
+        </tr>
+        <tr>
+            <td><strong>Comments</strong></td>
+            <td>{!claim.Comments__c}</td>
+        </tr>
+        <tr>
+            <td><strong>Final Decision</strong></td>
+            <td>{!claim.Final_Decision__c}</td>
+        </tr>
+    </table>
 </apex:page>

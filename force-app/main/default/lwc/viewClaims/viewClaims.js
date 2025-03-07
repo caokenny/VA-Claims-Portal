@@ -18,13 +18,12 @@ const COLUMNS = [
       variant: "brand"
     }
   },
-  { label: "Claimant", fieldName: "ClaimantName", type: "text" },
+  { label: "First Name", fieldName: "Claimant__r.First_Name__c", type: "text" },
+  { label: "Last Name", fieldName: "Claimant__r.Last_Name__c", type: "text" },
   { label: "Type", fieldName: "Type__c", type: "text" },
   { label: "Status", fieldName: "Status__c", type: "text" },
-  { label: "Date of Injury", fieldName: "Date_Of_Injury__c", type: "date" },
-  { label: "Education Type", fieldName: "Education_Type__c", type: "text" },
-  { label: "Disability", fieldName: "Disability__c", type: "text" },
-  { label: "Housing Status", fieldName: "Housing_Status__c", type: "text" },
+  { label: "Communication", fieldName: "Preferred_Communication_Method__c", type: "date" },
+  { label: "Comments", fieldName: "Comments__c", type: "text" },
   {
     label: "Download PDF",
     fieldName: "pdfLink",
@@ -42,8 +41,7 @@ export default class ViewClaims extends NavigationMixin(LightningElement) {
     if (data) {
       this.claims = data.map((record) => ({
         ...record,
-        // claimLink: `/view-claims/view-claims/track-claim?claimId=${record.Id}`,
-        pdfLink: `/apex/ClaimPDF?id=${record.Id}`, // Link to the Visualforce PDF page
+        pdfLink: `/apex/ClaimPDF?id=${record.Id}`, 
         ClaimantName: record.Claimant__r
           ? `${record.Claimant__r.First_Name__c} ${record.Claimant__r.Last_Name__c}`
           : "N/A"
