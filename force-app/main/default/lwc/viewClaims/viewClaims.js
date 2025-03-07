@@ -18,11 +18,15 @@ const COLUMNS = [
       variant: "brand"
     }
   },
-  { label: "First Name", fieldName: "Claimant__r.First_Name__c", type: "text" },
-  { label: "Last Name", fieldName: "Claimant__r.Last_Name__c", type: "text" },
+  // { label: "First Name", fieldName: "Claimant__r.First_Name__c", type: "text" },
+  { label: "Name", fieldName: "ClaimantName", type: "text" },
   { label: "Type", fieldName: "Type__c", type: "text" },
   { label: "Status", fieldName: "Status__c", type: "text" },
-  { label: "Communication", fieldName: "Preferred_Communication_Method__c", type: "date" },
+  {
+    label: "Communication",
+    fieldName: "Preferred_Communication_Method__c",
+    type: "text"
+  },
   { label: "Comments", fieldName: "Comments__c", type: "text" },
   {
     label: "Download PDF",
@@ -41,7 +45,7 @@ export default class ViewClaims extends NavigationMixin(LightningElement) {
     if (data) {
       this.claims = data.map((record) => ({
         ...record,
-        pdfLink: `/apex/ClaimPDF?id=${record.Id}`, 
+        pdfLink: `/apex/ClaimPDF?id=${record.Id}`,
         ClaimantName: record.Claimant__r
           ? `${record.Claimant__r.First_Name__c} ${record.Claimant__r.Last_Name__c}`
           : "N/A"
