@@ -49,6 +49,13 @@
           ></lightning-input>
 
           <lightning-input
+            label="SSN"
+            value={claimant.SSN__c}
+            data-field="SSN__c"
+            disabled="true"
+          ></lightning-input>
+
+          <lightning-input
             label="Phone"
             value={claimant.Phone__c}
             onchange={handleInputChange}

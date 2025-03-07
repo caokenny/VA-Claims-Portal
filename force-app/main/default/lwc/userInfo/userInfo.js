@@ -20,6 +20,12 @@ export default class ClaimantDetails extends LightningElement {
       if (this.claimant.Veteran_Status__c === "Discharged") {
         this.showDischargeType = true;
       }
+
+      if (this.claimant.SSN__c) {
+        this.claimant.SSN__c = "XXX-XX-" + this.claimant.SSN__c.slice(-4);
+        this.originalClaimant.SSN__c =
+          "XXX-XX-" + this.originalClaimant.SSN__c.slice(-4);
+      }
       this.error = undefined;
     } else if (error) {
       this.error = error.body.message;

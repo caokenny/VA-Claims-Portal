@@ -11,6 +11,7 @@ public without sharing class ClaimantController {
         First_Name__c,
         Last_Name__c,
         Email_Address__c,
+        SSN__c,
         Phone__c,
         DateOfBirth__c,
         Military_Branch__c,
