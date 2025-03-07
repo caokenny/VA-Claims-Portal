@@ -6,20 +6,36 @@ public with sharing class ClaimController {
 
     @AuraEnabled
     public static Id getOrCreateClaimantForUser(Id userId) {
-        
-        Claimant__c claimant;
         try {
-            claimant = [SELECT Id FROM Claimant__c WHERE User__c = :userId LIMIT 1];
+            // Get the current user's first and last name
+            User user = [SELECT Id FROM User WHERE Id = :userId LIMIT 1];
+
+            // Try to find an existing claimant linked to this user
+            Claimant__c claimant;
+            try {
+                claimant = [SELECT Id FROM Claimant__c WHERE User__c = :userId LIMIT 1];
+            } catch (Exception e) {
+                System.debug('Error fetching Claimant: ' + e.getMessage());
+            }
+
+            // If claimant does not exist, create one and associate it with the user
+            if (claimant == null) {
+                System.debug('No existing claimant found for user: ' + userId + '. Creating new claimant.');
+
+                claimant = new Claimant__c(
+                    First_Name__c = user.FirstName,
+                    Last_Name__c = user.LastName,
+                    User__c = userId
+                );
+
+                insert claimant;
+            }
+
+            return claimant.Id;
         } catch (Exception e) {
-            System.debug('Error fetching Claimant: ' + e.getMessage());
+            System.debug('Error in getOrCreateClaimantForUser: ' + e.getMessage());
+            return null;
         }
-    
-        if (claimant == null) {
-            claimant = new Claimant__c(User__c = userId);
-            insert claimant;
-        }
-    
-        return claimant.Id;
     }
 
     @AuraEnabled
@@ -29,11 +45,18 @@ public with sharing class ClaimController {
 
         
         Map<String, Id> recordTypeMap = new Map<String, Id>{
-            'Disability Compensation' => '0124U000000uzGLQAY',
-            'Education & Training' => '0124U000000uzGMQAY',
-            'Healthcare Benefits' => '0124U000000uzGNQAY',
-            'Housing Assistance' => '0124U000000uzGOQAY',
-            'Pension' => '0124U000000uzGPQAY'
+            // 'Disability Compensation' => '0124U000000uzGLQAY',
+            // 'Education & Training' => '0124U000000uzGMQAY',
+            // 'Healthcare Benefits' => '0124U000000uzGNQAY',
+            // 'Housing Assistance' => '0124U000000uzGOQAY',
+            // 'Pension' => '0124U000000uzGPQAY'
+
+            //sandbox
+            'Disability Compensation' => '0128N000004lU4QQAU',
+            'Education & Training' => '0128N000004lU4kQAE',
+            'Healthcare Benefits' => '0128N000004lU4fQAE',
+            'Housing Assistance' => '0128N000004lU4VQAU',
+            'Pension' => '0128N000004lU4aQAE'
         };
 
         
